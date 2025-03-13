@@ -29,7 +29,6 @@ export interface DbBook {
   status?: string;
   source?: string;
   image_url?: string | null;
-  imageUrl?: string | null;
   date_added?: string | Date;
   isbn?: string | null;
   page_count?: number | null;
@@ -74,9 +73,9 @@ export interface BookFormData {
 // Helper function to map from database book to UI book
 export function mapDbBookToUiBook(dbBook: DbBook): Book {
   const status = dbBook.status ? 
-    (dbBook.status === 'to_read' ? 'wishlist' : 
-     dbBook.status === 'in_progress' ? 'reading' : 
-     dbBook.status === 'finished' ? 'completed' : 'wishlist') : 
+    (dbBook.status === 'WISHLIST' ? 'wishlist' : 
+     dbBook.status === 'IN_PROGRESS' ? 'reading' : 
+     dbBook.status === 'COMPLETED' ? 'completed' : 'wishlist') : 
     'wishlist';
   
   // Format date consistently
@@ -85,7 +84,7 @@ export function mapDbBookToUiBook(dbBook: DbBook): Book {
     new Date().toISOString().split('T')[0];
   
   // Handle the case where imageUrl is available but coverUrl isn't
-  const imageUrl = dbBook.image_url || dbBook.imageUrl || null;
+  const imageUrl = dbBook.image_url || null;
   
   return {
     id: dbBook.id || '',
@@ -120,9 +119,9 @@ export function mapUiBookToDbBook(bookData: BookFormData, existingBook?: Partial
   // Status mapping
   if (bookData.status) {
     const statusMap = {
-      'wishlist': 'to_read',
-      'reading': 'in_progress',
-      'completed': 'finished'
+      'wishlist': 'WISHLIST',
+      'reading': 'IN_PROGRESS',
+      'completed': 'COMPLETED'
     } as const;
     dbBook.status = statusMap[bookData.status];
   }
@@ -132,7 +131,7 @@ export function mapUiBookToDbBook(bookData: BookFormData, existingBook?: Partial
     dbBook.source = bookData.source.toUpperCase();
   }
   
-  // Cover URL (handle either coverUrl or imageUrl)
+  // Cover URL
   if (bookData.coverUrl) {
     dbBook.image_url = bookData.coverUrl;
   }

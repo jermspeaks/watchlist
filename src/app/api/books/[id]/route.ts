@@ -66,7 +66,7 @@ export async function PATCH(
     const dbBook = mapUiBookToDbBook(bookData);
     
     // Update book in the database
-    const updatedBook = await booksRepository.update(id, dbBook as unknown as Partial<DbBook>);
+    const updatedBook = await booksRepository.update(id, dbBook as Partial<DbBook>);
     
     if (!updatedBook) {
       return NextResponse.json(

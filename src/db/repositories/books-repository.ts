@@ -18,6 +18,7 @@ export interface Book {
   status: 'WISHLIST' | 'IN_PROGRESS' | 'COMPLETED';
   source: string | null;
   sourceUrl: string | null;
+  image_url: string | null;
   imageUrl: string | null;
   mediaType: string;
   // Book-specific fields
@@ -109,7 +110,7 @@ export class BooksRepository extends BaseRepository<Book> {
       }
 
       // Prepare media item data
-      const mediaData: Record<string, any> = {
+      const mediaData: Record<string, unknown> = {
         dateUpdated: new Date(),
       };
 
@@ -159,10 +160,10 @@ export class BooksRepository extends BaseRepository<Book> {
       }
       
       if (data.sourceUrl !== undefined) mediaData.sourceUrl = data.sourceUrl;
-      if (data.imageUrl !== undefined) mediaData.imageUrl = data.imageUrl;
+      if (data.image_url !== undefined) mediaData.imageUrl = data.image_url;
 
       // Update the media item
-      const [updatedMedia] = await tx
+      await tx
         .update(mediaItems)
         .set(mediaData)
         .where(eq(mediaItems.id, id))
@@ -176,7 +177,7 @@ export class BooksRepository extends BaseRepository<Book> {
         .limit(1);
 
       // Prepare book data
-      const bookData: Record<string, any> = {};
+      const bookData: Record<string, unknown> = {};
 
       // Copy book-specific fields
       if (data.isbn !== undefined) bookData.isbn = data.isbn;
@@ -343,7 +344,7 @@ export class BooksRepository extends BaseRepository<Book> {
   }
 
   // Helper to map joined results to a Book object
-  private mapToBook(result: any): Book {
+  private mapToBook(result: Record<string, unknown>): Book {
     // Log the raw database row to see what's being received
     // console.log('Raw DB row:', {
     //   id: result.media_items?.id,
@@ -352,39 +353,40 @@ export class BooksRepository extends BaseRepository<Book> {
     //   hasImageUrl: !!result.media_items?.imageUrl
     // });
     
-    const mediaItem = result.media_items;
-    const book = result.books;
+    const mediaItem = result.media_items as Record<string, unknown>;
+    const book = result.books as Record<string, unknown> | null;
 
     return {
-      id: mediaItem.id,
-      title: mediaItem.title,
-      description: mediaItem.description,
-      aiDescription: mediaItem.ai_description,
-      rating: mediaItem.rating,
-      ranking: mediaItem.ranking,
-      tags: mediaItem.tags,
-      author: mediaItem.author,
-      dateAdded: mediaItem.date_added,
-      dateUpdated: mediaItem.date_updated,
-      status: mediaItem.status,
-      source: mediaItem.source,
-      sourceUrl: mediaItem.source_url,
-      imageUrl: mediaItem.imageUrl,
-      mediaType: mediaItem.media_type,
+      id: mediaItem.id as string,
+      title: mediaItem.title as string,
+      description: mediaItem.description as string | null,
+      aiDescription: mediaItem.ai_description as string | null,
+      rating: mediaItem.rating as number | null,
+      ranking: mediaItem.ranking as number | null,
+      tags: mediaItem.tags as string[],
+      author: mediaItem.author as string | null,
+      dateAdded: mediaItem.date_added as Date,
+      dateUpdated: mediaItem.date_updated as Date,
+      status: mediaItem.status as 'WISHLIST' | 'IN_PROGRESS' | 'COMPLETED',
+      source: mediaItem.source as string | null,
+      sourceUrl: mediaItem.source_url as string | null,
+      imageUrl: mediaItem.imageUrl as string | null,
+      image_url: mediaItem.imageUrl as string | null,
+      mediaType: mediaItem.media_type as string,
       // Book-specific fields
-      isbn: book?.isbn,
-      isbn13: book?.isbn13,
-      pageCount: book?.page_count,
-      publisher: book?.publisher,
-      publishedDate: book?.published_date,
-      format: book?.format,
-      bookSource: book?.source,
-      language: book?.language,
-      currentPage: book?.current_page,
-      series: book?.series,
-      seriesPosition: book?.series_position,
-      edition: book?.edition,
-      translator: book?.translator,
+      isbn: book?.isbn as string | null,
+      isbn13: book?.isbn13 as string | null,
+      pageCount: book?.page_count as number | null,
+      publisher: book?.publisher as string | null,
+      publishedDate: book?.published_date as string | null,
+      format: book?.format as 'PHYSICAL' | 'EBOOK' | 'AUDIOBOOK' | null,
+      bookSource: book?.source as 'AMAZON' | 'KINDLE' | 'KOBO' | 'PHYSICAL' | 'OTHER' | null,
+      language: book?.language as string | null,
+      currentPage: book?.current_page as number | null,
+      series: book?.series as string | null,
+      seriesPosition: book?.series_position as number | null,
+      edition: book?.edition as string | null,
+      translator: book?.translator as string | null,
     };
   }
 } 

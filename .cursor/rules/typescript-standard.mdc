@@ -1,11 +1,12 @@
 ---
 description: Typescript standards to enforce
-globs: 
-alwaysApply: false
+globs: *.ts, *.tsx
+alwaysApply: true
 ---
-#### TypeScript
-- Strict mode enabled
-- Use type inference where possible
-- Explicit return types on functions
-- Interface over type for object definitions
-- Enums for fixed sets of values
+### TypeScript Usage
+- Use TypeScript for all code
+- Prefer interfaces over types
+- Avoid enums; use const maps instead
+- Implement proper type safety and inference
+- Use `satisfies` operator for type validation
+ - Use functional components with TypeScript interfaces.
