@@ -35,91 +35,9 @@ interface IMediaBase {
 
 ## Feature Roadmap
 
-### Phase 1: Foundation (MVP)
+> Note: Phase 1 has been completed. See CHANGELOG.md for details.
 
-#### Basic UI Components
-
-- [x] Create homepage with category dashboard
-- [x] Set up basic category page layout (Books)
-- [x] Implement basic card view for items
-- [x] Add table view option
-- [x] Implement view toggle (card/table)
-- [x] Add pagination support
-- [x] Add sorting functionality
-- [x] Add navigation header
-- [x] Enhance search and filter capabilities
-  - [x] Basic text search
-  - [x] Status filter
-  - [x] Source filter
-  - [x] Sort by different fields
-  - [x] Advanced filters (rating, date, etc.)
-
-#### CRUD Operations
-
-- [x] Create operations
-  - [x] Add book form with validation
-  - [x] Manual entry support
-  - [x] Image URL support
-- [x] Read operations
-  - [x] Basic list view
-  - [x] Grid/Table view options
-- [x] Update operations
-  - [x] Edit item details
-  - [x] Status update shortcuts
-- [x] Delete operations
-  - [x] Single item delete
-
-#### Category Pages Setup
-
-- [x] Books
-  - [x] List view
-  - [x] Add form
-  - [x] Cover art support
-  - [x] Placeholder images
-- [x] Films & TV
-  - [x] List view
-  - [x] Add form
-  - [x] Poster art support
-  - [x] Placeholder images
-- [x] Video Games
-  - [x] List view
-  - [x] Add form
-  - [x] Cover art support
-  - [x] Platform tags
-  - [x] Playtime tracking
-  - [x] Completion status (Completed, Abandoned, etc.)
-  - [x] Placeholder images
-- [x] Board Games
-  - [x] List view
-  - [x] Add form
-  - [x] Box art support
-  - [x] Player count info
-  - [x] Play time info
-  - [x] Complexity rating
-  - [x] Placeholder images
-- [x] Podcasts
-  - [x] List view
-  - [x] Add form
-  - [x] Cover art support
-  - [x] Episode tracking
-  - [x] Subscription status
-  - [x] Placeholder images
-- [x] YouTube
-  - [x] List view
-  - [x] Add form
-  - [x] Thumbnail support
-  - [x] Channel grouping
-  - [x] Watch status tracking
-  - [x] Placeholder images
-- [x] Places
-  - [x] List view
-  - [x] Add form
-  - [x] Photo support
-  - [x] Visit date tracking
-  - [x] Location categories (Restaurant, Attraction, etc.)
-  - [x] Placeholder images
-
-### Phase 2: Database & Authentication
+### Phase 1: Database & Authentication
 
 #### Database Setup
 
@@ -140,7 +58,7 @@ interface IMediaBase {
 
 - [ ] Save filter preferences
 
-### Phase 3: Enhanced Features
+### Phase 2: Enhanced Features
 
 #### Enhanced Category Features
 
@@ -179,7 +97,7 @@ interface IMediaBase {
 - [ ] Ranking system
 - [ ] Personal notes
 
-### Phase 4: Import Systems
+### Phase 3: Import Systems
 
 - [ ] Books
   - [ ] Amazon Wishlist Import
@@ -197,7 +115,7 @@ interface IMediaBase {
   - [ ] Watch Later Import
   - [ ] Subscription List Import
 
-### Phase 5: Advanced Features
+### Phase 4: Advanced Features
 
 - [ ] Author Pages
 - [ ] Analytics Dashboard
