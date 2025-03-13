@@ -3,25 +3,27 @@
 ## Database Schema (Draft)
 
 ### Media Item (Base)
+
 ```typescript
 interface IMediaBase {
-  id: string
-  title: string
-  description: string
-  aiDescription?: string
-  rating?: number
-  ranking?: number
-  tags: string[]
-  author?: string
-  dateAdded: Date
-  dateUpdated: Date
-  status: 'WISHLIST' | 'IN_PROGRESS' | 'COMPLETED'
-  source: string
-  sourceUrl?: string
+  id: string;
+  title: string;
+  description: string;
+  aiDescription?: string;
+  rating?: number;
+  ranking?: number;
+  tags: string[];
+  author?: string;
+  dateAdded: Date;
+  dateUpdated: Date;
+  status: "WISHLIST" | "IN_PROGRESS" | "COMPLETED";
+  source: string;
+  sourceUrl?: string;
 }
 ```
 
 ### Category-Specific Extensions
+
 - Books (Amazon, Kindle, Kobo, Physical)
 - Films (Letterboxd, Stremio, Personal Archive)
 - TV Shows (TMDB, Personal Archive)
@@ -34,7 +36,9 @@ interface IMediaBase {
 ## Feature Roadmap
 
 ### Phase 1: Foundation (MVP)
-### Basic UI Components ✓
+
+#### Basic UI Components ✓
+
 - [x] Create homepage with category dashboard
 - [x] Set up basic category page layout (Books)
 - [x] Implement basic card view for items
@@ -43,20 +47,22 @@ interface IMediaBase {
 - [x] Add pagination support
 - [x] Add sorting functionality
 - [x] Add navigation header
-- [ ] Enhance search and filter capabilities
+- [x] Enhance search and filter capabilities
   - [x] Basic text search
   - [x] Status filter
   - [x] Source filter
   - [x] Sort by different fields
-  - [ ] Advanced filters (rating, date, etc.)
+  - [x] Advanced filters (rating, date, etc.)
   - [ ] Save filter preferences
 
-### CRUD Operations
+#### CRUD Operations
+
 - [ ] Create operations
   - [x] Add book form with validation
   - [x] Manual entry support
   - [ ] ISBN lookup integration
-  - [x] Image upload/URL support
+  - [x] Image URL support
+  - [ ] Image upload
 - [ ] Read operations
   - [x] Basic list view
   - [x] Grid/Table view options
@@ -71,33 +77,37 @@ interface IMediaBase {
   - [ ] Bulk delete support
   - [ ] Soft delete implementation
 
-### Category Pages Setup
+#### Category Pages Setup
+
 - [x] Books
   - [x] List view
   - [x] Add form
   - [x] Cover art support
   - [x] Placeholder images
-- [ ] Films & TV
+- [x] Films & TV
 - [ ] Video Games
 - [ ] Board Games
 - [ ] Podcasts
 - [ ] YouTube
 - [ ] Places
 
-### Database Setup
+#### Database Setup
+
 - [ ] Choose and set up database
 - [ ] Design and implement schemas
 - [ ] Set up migrations
 - [ ] Add seed data
 - [ ] Implement data validation
 
-### Authentication System
+#### Authentication System
+
 - [ ] Set up authentication provider
 - [ ] Implement login/register
 - [ ] Add user profiles
 - [ ] Set up authorization rules
 
 ### Phase 2: Import Systems
+
 - [ ] Books
   - [ ] Amazon Wishlist Import
   - [ ] Kindle Library Import
@@ -115,6 +125,7 @@ interface IMediaBase {
   - [ ] Subscription List Import
 
 ### Phase 3: Enhanced Features
+
 - [ ] AI Integration
   - [ ] Automated descriptions
   - [ ] Tag generation
@@ -129,6 +140,7 @@ interface IMediaBase {
   - [ ] Personal notes
 
 ### Phase 4: Advanced Features
+
 - [ ] Author Pages
 - [ ] Analytics Dashboard
 - [ ] Export Capabilities
@@ -138,6 +150,7 @@ interface IMediaBase {
 ## API Integrations
 
 ### Required APIs
+
 1. YouTube Data API
 2. TMDB API
 3. Google Books API
@@ -148,6 +161,7 @@ interface IMediaBase {
 8. PocketCasts API
 
 ### Data Storage Considerations
+
 - Media metadata
 - User preferences
 - Watch/Read history
@@ -158,18 +172,21 @@ interface IMediaBase {
 ## Development Guidelines
 
 1. **Testing**
+
    - Unit tests for utilities
    - Integration tests for API endpoints
    - Component tests for UI
    - E2E tests for critical flows
 
 2. **Performance**
+
    - Image optimization
    - Lazy loading
    - API response caching
    - Progressive loading
 
 3. **Security**
+
    - API key management
    - User data protection
    - Rate limiting
@@ -180,15 +197,7 @@ interface IMediaBase {
    - Keyboard navigation
    - Screen reader support
    - Color contrast
-
-## Next Steps
-
-1. Set up database and ORM
-2. Create basic UI components
-3. Implement authentication
-4. Start with one category (e.g., Books or Films)
-5. Build import system for chosen category
-6. Iterate based on usage and feedback
+   - [x] Fixed date picker day header spacing
 
 ## Future Enhancements
 
@@ -197,4 +206,4 @@ interface IMediaBase {
 - Reset filters (advanced control)
 - Media detailed pages
 - Within each media page, be able to group items together into named lists
-
+- Build import system for chosen category

@@ -20,7 +20,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Slider } from "@/components/ui/slider"
-import { PlusIcon, DotsHorizontalIcon } from "@radix-ui/react-icons"
+import { PlusIcon, DotsHorizontalIcon, ResetIcon } from "@radix-ui/react-icons"
 import { MediaList } from "@/components/media/media-list"
 import { DateRangePicker } from "@/components/ui/date-range-picker"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -184,9 +184,40 @@ export default function FilmsPage() {
                     ))}
                   </div>
                 </div>
+
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    setRatingRange([0, 5])
+                    setDateRange(undefined)
+                    setSelectedGenres([])
+                  }}
+                >
+                  <ResetIcon className="mr-2 h-4 w-4" />
+                  Reset Advanced Filters
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearchQuery("")
+              setStatusFilter("all")
+              setSourceFilter("all")
+              setTypeFilter("all")
+              setRatingRange([0, 5])
+              setDateRange(undefined)
+              setSelectedGenres([])
+            }}
+            className="ml-2"
+          >
+            <ResetIcon className="mr-2 h-4 w-4" />
+            Reset All
+          </Button>
         </div>
 
         {/* Media List */}
