@@ -33,23 +33,7 @@ import {
   Pencil1Icon,
 } from "@radix-ui/react-icons"
 import { Dispatch, SetStateAction } from "react"
-
-export interface Book {
-  id: string
-  title: string
-  author: string
-  description: string
-  rating?: number
-  status: "wishlist" | "reading" | "completed"
-  source: "amazon" | "kindle" | "kobo" | "physical"
-  coverUrl?: string
-  dateAdded: string
-  isbn?: string
-  pageCount?: number
-  publisher?: string
-  publishedDate?: string
-  currentPage?: number
-}
+import { Book } from "@/types/book"
 
 export interface BookListProps {
   books: Book[]

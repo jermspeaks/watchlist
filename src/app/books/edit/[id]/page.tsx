@@ -4,7 +4,6 @@ import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -27,23 +26,9 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons"
 import Link from "next/link"
 import { getBookById, updateBook } from "@/services/books-service"
 import { useToast } from "@/components/ui/use-toast"
+import { BookFormData, bookFormSchema } from "@/types/book"
 
-const bookFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  author: z.string().min(1, "Author is required"),
-  description: z.string().optional(),
-  isbn: z.string().optional(),
-  pageCount: z.coerce.number().optional(),
-  publisher: z.string().optional(),
-  publishedDate: z.string().optional(),
-  coverUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  status: z.enum(["wishlist", "reading", "completed"]),
-  source: z.enum(["amazon", "kindle", "kobo", "physical"]),
-  rating: z.coerce.number().min(0).max(5).optional(),
-  currentPage: z.coerce.number().optional(),
-})
-
-type BookFormValues = z.infer<typeof bookFormSchema>
+type BookFormValues = BookFormData
 
 export default function EditBookPage({ params }: { params: { id: string } }) {
   const router = useRouter()

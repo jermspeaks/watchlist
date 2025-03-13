@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { BookList, Book } from "@/components/books/book-list"
+import { BookList } from "@/components/books/book-list"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { getBooks, deleteBook } from "@/services/books-service"
 import { useToast } from "@/components/ui/use-toast"
@@ -25,6 +25,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Book } from "@/types/book"
 
 export default function BooksPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -58,28 +59,7 @@ export default function BooksPage() {
         pageSize: 12,
       })
       
-      // Convert the API response to match the Book type
-      const formattedBooks = result.books.map(book => {
-        const formattedBook: Book = {
-          id: book.id,
-          title: book.title,
-          author: book.author,
-          description: book.description,
-          rating: book.rating ?? undefined,
-          status: book.status as "wishlist" | "reading" | "completed",
-          source: book.source as "amazon" | "kindle" | "kobo" | "physical",
-          coverUrl: book.coverUrl || undefined,
-          dateAdded: book.dateAdded,
-          isbn: book.isbn || undefined,
-          pageCount: book.pageCount ?? undefined,
-          publisher: book.publisher || undefined,
-          publishedDate: book.publishedDate || undefined,
-          currentPage: book.currentPage ?? undefined,
-        };
-        return formattedBook;
-      });
-      
-      setBooks(formattedBooks)
+      setBooks(result.books)
       setTotalBooks(result.total)
       setTotalPages(result.totalPages)
     } catch (error) {
@@ -126,6 +106,9 @@ export default function BooksPage() {
         title: "Success",
         description: "Book deleted successfully",
       })
+      
+      // Refresh the books list after deletion
+      fetchBooks()
     } catch (error) {
       console.error("Error deleting book:", error)
       

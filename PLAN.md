@@ -73,8 +73,9 @@ interface IMediaBase {
 - [x] Implement loading states during data fetching
 - [x] Add error handling for database operations
 - [x] Implement optimistic updates for better UX
+- [x] Standardize types between UI and API
 
-#### Data Persistence Features
+#### Data Persistence Features (Current Focus)
 
 - [ ] Implement filter preference saving
 - [ ] Add recently viewed items tracking
