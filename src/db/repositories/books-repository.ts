@@ -94,6 +94,155 @@ export class BooksRepository extends BaseRepository<Book> {
     });
   }
 
+  // Override update to handle both media item and book in a transaction
+  async update(id: string, data: Partial<Omit<Book, 'id'>>): Promise<Book | undefined> {
+    return db.transaction(async (tx) => {
+      // Check if the media item exists
+      const existingMedia = await tx
+        .select()
+        .from(mediaItems)
+        .where(eq(mediaItems.id, id))
+        .limit(1);
+
+      if (existingMedia.length === 0) {
+        return undefined;
+      }
+
+      // Prepare media item data
+      const mediaData: Record<string, any> = {
+        dateUpdated: new Date(),
+      };
+
+      // Copy relevant fields to media item update
+      if (data.title !== undefined) mediaData.title = data.title;
+      if (data.description !== undefined) mediaData.description = data.description;
+      if (data.aiDescription !== undefined) mediaData.aiDescription = data.aiDescription;
+      if (data.rating !== undefined) mediaData.rating = data.rating;
+      if (data.ranking !== undefined) mediaData.ranking = data.ranking;
+      if (data.tags !== undefined) mediaData.tags = data.tags;
+      if (data.author !== undefined) mediaData.author = data.author;
+      
+      // Ensure status is one of the valid enum values
+      if (data.status !== undefined) {
+        // Map UI status to database status if needed
+        if (data.status === 'IN_PROGRESS') {
+          mediaData.status = 'IN_PROGRESS';
+        } else if (data.status === 'WISHLIST') {
+          mediaData.status = 'WISHLIST';
+        } else if (data.status === 'COMPLETED') {
+          mediaData.status = 'COMPLETED';
+        } else if (data.status === 'to_read' || data.status === 'wishlist') {
+          mediaData.status = 'WISHLIST';
+        } else if (data.status === 'in_progress' || data.status === 'reading') {
+          mediaData.status = 'IN_PROGRESS';
+        } else if (data.status === 'finished' || data.status === 'completed') {
+          mediaData.status = 'COMPLETED';
+        }
+      }
+      
+      // Handle source mapping
+      if (data.source !== undefined) {
+        // Map UI source to database source if needed
+        if (data.source === 'AMAZON' || data.source === 'amazon') {
+          mediaData.source = 'AMAZON';
+        } else if (data.source === 'KINDLE' || data.source === 'kindle') {
+          mediaData.source = 'KINDLE';
+        } else if (data.source === 'KOBO' || data.source === 'kobo') {
+          mediaData.source = 'KOBO';
+        } else if (data.source === 'PHYSICAL' || data.source === 'physical') {
+          mediaData.source = 'PHYSICAL';
+        } else if (data.source === 'OTHER' || data.source === 'other') {
+          mediaData.source = 'OTHER';
+        } else if (data.source) {
+          mediaData.source = data.source.toUpperCase();
+        }
+      }
+      
+      if (data.sourceUrl !== undefined) mediaData.sourceUrl = data.sourceUrl;
+      if (data.imageUrl !== undefined) mediaData.imageUrl = data.imageUrl;
+
+      // Update the media item
+      const [updatedMedia] = await tx
+        .update(mediaItems)
+        .set(mediaData)
+        .where(eq(mediaItems.id, id))
+        .returning();
+
+      // Check if the book exists
+      const existingBook = await tx
+        .select()
+        .from(books)
+        .where(eq(books.id, id))
+        .limit(1);
+
+      // Prepare book data
+      const bookData: Record<string, any> = {};
+
+      // Copy book-specific fields
+      if (data.isbn !== undefined) bookData.isbn = data.isbn;
+      if (data.isbn13 !== undefined) bookData.isbn13 = data.isbn13;
+      if (data.pageCount !== undefined) bookData.pageCount = data.pageCount;
+      if (data.publisher !== undefined) bookData.publisher = data.publisher;
+      if (data.publishedDate !== undefined) bookData.publishedDate = data.publishedDate;
+      if (data.format !== undefined) bookData.format = data.format;
+      if (data.bookSource !== undefined) bookData.source = data.bookSource;
+      if (data.language !== undefined) bookData.language = data.language;
+      if (data.currentPage !== undefined) bookData.currentPage = data.currentPage;
+      if (data.series !== undefined) bookData.series = data.series;
+      if (data.seriesPosition !== undefined) bookData.seriesPosition = data.seriesPosition;
+      if (data.edition !== undefined) bookData.edition = data.edition;
+      if (data.translator !== undefined) bookData.translator = data.translator;
+
+      // If book exists, update it; otherwise, create it
+      if (existingBook.length > 0) {
+        if (Object.keys(bookData).length > 0) {
+          await tx
+            .update(books)
+            .set(bookData)
+            .where(eq(books.id, id));
+        }
+      } else if (Object.keys(bookData).length > 0) {
+        // Create a new book entry with the same ID
+        await tx
+          .insert(books)
+          .values({
+            id,
+            ...bookData,
+          });
+      }
+
+      // Return the updated book
+      return this.findById(id);
+    });
+  }
+
+  // Override delete to handle both media item and book in a transaction
+  async delete(id: string): Promise<boolean> {
+    return db.transaction(async (tx) => {
+      // First check if the book exists
+      const existingBook = await tx
+        .select()
+        .from(books)
+        .where(eq(books.id, id))
+        .limit(1);
+
+      // Delete the book if it exists
+      if (existingBook.length > 0) {
+        await tx
+          .delete(books)
+          .where(eq(books.id, id));
+      }
+
+      // Then delete the media item
+      const deletedMedia = await tx
+        .delete(mediaItems)
+        .where(eq(mediaItems.id, id))
+        .returning();
+
+      return deletedMedia.length > 0;
+    });
+  }
+
   // Override findById to join the media item and book
   async findById(id: string): Promise<Book | undefined> {
     const results = await db

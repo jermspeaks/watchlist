@@ -11,7 +11,14 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    // Ensure we have the ID before proceeding
+    const { id } = await params;
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Book ID is required' },
+        { status: 400 }
+      );
+    }
     
     // Get book from the database
     const book = await booksRepository.findById(id);
@@ -44,14 +51,29 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    // Ensure we have the ID before proceeding
+    const { id } = await params;
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Book ID is required' },
+        { status: 400 }
+      );
+    }
+    
     const bookData = await request.json();
     
     // Map UI data to database data using our helper function
     const dbBook = mapUiBookToDbBook(bookData);
     
     // Update book in the database
-    await booksRepository.update(id, dbBook as unknown as Partial<DbBook>);
+    const updatedBook = await booksRepository.update(id, dbBook as unknown as Partial<DbBook>);
+    
+    if (!updatedBook) {
+      return NextResponse.json(
+        { error: 'Book not found' },
+        { status: 404 }
+      );
+    }
     
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -68,10 +90,24 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    // Ensure we have the ID before proceeding
+    const { id } = await params;
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Book ID is required' },
+        { status: 400 }
+      );
+    }
     
     // Delete book from the database
-    await booksRepository.delete(id);
+    const success = await booksRepository.delete(id);
+    
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Book not found or could not be deleted' },
+        { status: 404 }
+      );
+    }
     
     return NextResponse.json({ success: true });
   } catch (error) {
