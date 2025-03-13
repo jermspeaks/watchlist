@@ -1,0 +1,11 @@
+---
+description: Typescript standards to enforce
+globs: 
+alwaysApply: false
+---
+#### TypeScript
+- Strict mode enabled
+- Use type inference where possible
+- Explicit return types on functions
+- Interface over type for object definitions
+- Enums for fixed sets of values
