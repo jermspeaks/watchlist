@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BooksRepository } from '@/db/repositories/books-repository';
-import type { Book } from '@/db/repositories/books-repository';
+import type { Book as DbBook } from '@/db/repositories/books-repository';
+import { mapDbBookToUiBook, mapUiBookToDbBook } from '@/types/book';
 
 // Create an instance of the books repository
 const booksRepository = new BooksRepository();
@@ -49,24 +50,8 @@ export async function GET(request: NextRequest) {
       pageSize,
     });
     
-    // Map database books to UI books
-    const books = result.data.map(book => ({
-      id: book.id,
-      title: book.title,
-      author: book.author || '',
-      description: book.description || '',
-      rating: book.rating,
-      status: book.status === 'WISHLIST' ? 'wishlist' : 
-              book.status === 'IN_PROGRESS' ? 'reading' : 'completed',
-      source: (book.bookSource?.toLowerCase() || 'physical') as 'amazon' | 'kindle' | 'kobo' | 'physical',
-      coverUrl: book.imageUrl,
-      dateAdded: book.dateAdded ? book.dateAdded.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-      isbn: book.isbn,
-      pageCount: book.pageCount,
-      publisher: book.publisher,
-      publishedDate: book.publishedDate,
-      currentPage: book.currentPage,
-    }));
+    // Map database books to UI books using our helper function
+    const books = result.data.map(book => mapDbBookToUiBook(book as unknown as import('@/types/book').DbBook));
     
     return NextResponse.json({
       books,
@@ -86,35 +71,20 @@ export async function POST(request: NextRequest) {
   try {
     const bookData = await request.json();
     
-    // Map UI data to database data
-    const dbBook: Partial<Book> = {
-      title: bookData.title,
-      description: bookData.description || null,
-      author: bookData.author,
-      status: statusMap[bookData.status as keyof typeof statusMap],
-      source: bookData.source.toUpperCase(),
-      imageUrl: bookData.coverUrl || null,
-      mediaType: 'book',
-      tags: [],
-      isbn: bookData.isbn || null,
-      pageCount: bookData.pageCount || null,
-      publisher: bookData.publisher || null,
-      publishedDate: bookData.publishedDate || null,
-      format: null,
-      bookSource: sourceMap[bookData.source as keyof typeof sourceMap],
-      language: null,
-      currentPage: bookData.currentPage || null,
-      rating: bookData.rating || null,
-      // Required fields for Book type
-      dateAdded: new Date(),
-      dateUpdated: new Date(),
-      aiDescription: null,
-      ranking: null,
-      sourceUrl: null,
-    };
+    // Map UI data to database data using our helper function
+    const dbBook = mapUiBookToDbBook(bookData);
+    
+    // Add required fields for Book type
+    dbBook.mediaType = 'book';
+    dbBook.tags = [];
+    dbBook.dateAdded = new Date();
+    dbBook.dateUpdated = new Date();
+    dbBook.aiDescription = null;
+    dbBook.ranking = null;
+    dbBook.sourceUrl = null;
     
     // Add book to the database
-    const newBook = await booksRepository.create(dbBook as Omit<Book, 'id'>);
+    const newBook = await booksRepository.create(dbBook as unknown as Omit<DbBook, 'id'>);
     
     return NextResponse.json({ id: newBook.id });
   } catch (error) {

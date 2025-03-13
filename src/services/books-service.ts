@@ -1,18 +1,5 @@
-// Remove the database imports
-export interface BookFormData {
-  title: string;
-  author: string;
-  description?: string;
-  isbn?: string;
-  coverUrl?: string;
-  status: 'wishlist' | 'reading' | 'completed';
-  source: 'amazon' | 'kindle' | 'kobo' | 'physical';
-  rating?: number;
-  pageCount?: number;
-  publisher?: string;
-  publishedDate?: string;
-  currentPage?: number;
-}
+// Import the standardized types
+import { Book, BookFormData } from '@/types/book';
 
 export async function getBooks({
   search = '',
@@ -56,7 +43,7 @@ export async function getBooks({
   }
 }
 
-export async function getBookById(id: string) {
+export async function getBookById(id: string): Promise<Book | null> {
   try {
     // Call the API endpoint
     const response = await fetch(`/api/books/${id}`);
@@ -75,7 +62,7 @@ export async function getBookById(id: string) {
   }
 }
 
-export async function addBook(bookData: BookFormData) {
+export async function addBook(bookData: BookFormData): Promise<string> {
   try {
     // Call the API endpoint
     const response = await fetch('/api/books', {
@@ -98,7 +85,7 @@ export async function addBook(bookData: BookFormData) {
   }
 }
 
-export async function updateBook(id: string, bookData: Partial<BookFormData>) {
+export async function updateBook(id: string, bookData: Partial<BookFormData>): Promise<boolean> {
   try {
     // Call the API endpoint
     const response = await fetch(`/api/books/${id}`, {
@@ -120,7 +107,7 @@ export async function updateBook(id: string, bookData: Partial<BookFormData>) {
   }
 }
 
-export async function deleteBook(id: string) {
+export async function deleteBook(id: string): Promise<boolean> {
   try {
     // Call the API endpoint
     const response = await fetch(`/api/books/${id}`, {
