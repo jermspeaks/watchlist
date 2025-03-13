@@ -126,9 +126,9 @@ export function BookList({
             <Card key={book.id} className="p-4">
               <div className="space-y-3">
                 <div className="aspect-[2/3] relative bg-muted rounded-md overflow-hidden">
-                  {book.coverUrl ? (
+                  {(book.coverUrl || book.imageUrl) ? (
                     <Image
-                      src={book.coverUrl}
+                      src={book.coverUrl || book.imageUrl || ''}
                       alt={`Cover of ${book.title}`}
                       className="w-full h-full object-cover"
                       width={200}

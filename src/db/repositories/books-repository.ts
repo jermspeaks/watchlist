@@ -195,6 +195,14 @@ export class BooksRepository extends BaseRepository<Book> {
 
   // Helper to map joined results to a Book object
   private mapToBook(result: any): Book {
+    // Log the raw database row to see what's being received
+    console.log('Raw DB row:', {
+      id: result.media_items?.id,
+      title: result.media_items?.title,
+      imageUrl: result.media_items?.imageUrl,
+      hasImageUrl: !!result.media_items?.imageUrl
+    });
+    
     const mediaItem = result.media_items;
     const book = result.books;
 
@@ -212,7 +220,7 @@ export class BooksRepository extends BaseRepository<Book> {
       status: mediaItem.status,
       source: mediaItem.source,
       sourceUrl: mediaItem.source_url,
-      imageUrl: mediaItem.image_url,
+      imageUrl: mediaItem.imageUrl,
       mediaType: mediaItem.media_type,
       // Book-specific fields
       isbn: book?.isbn,

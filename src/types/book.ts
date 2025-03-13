@@ -10,6 +10,7 @@ export interface Book {
   status: "wishlist" | "reading" | "completed";
   source: "amazon" | "kindle" | "kobo" | "physical";
   coverUrl?: string; // We use coverUrl consistently in the UI
+  imageUrl?: string; // For backward compatibility
   dateAdded: string;
   isbn?: string;
   pageCount?: number;
@@ -18,25 +19,24 @@ export interface Book {
   currentPage?: number;
 }
 
-// Database book type (simplified for mapping purposes)
+// Define a type for database book objects (with snake_case)
 export interface DbBook {
   id: string;
   title: string;
   author?: string | null;
   description?: string | null;
   rating?: number | null;
-  status: string;
-  source?: string | null;
-  bookSource?: string | null;
+  status?: string;
+  source?: string;
+  image_url?: string | null;
   imageUrl?: string | null;
-  dateAdded?: Date | null;
+  date_added?: string | Date;
   isbn?: string | null;
-  pageCount?: number | null;
+  page_count?: number | null;
   publisher?: string | null;
-  publishedDate?: string | null;
-  currentPage?: number | null;
+  published_date?: string | null;
+  current_page?: number | null;
   dateUpdated?: Date | null;
-  [key: string]: unknown; // Allow for additional properties with unknown type
 }
 
 // Zod schema for form validation
@@ -73,67 +73,78 @@ export interface BookFormData {
 
 // Helper function to map from database book to UI book
 export function mapDbBookToUiBook(dbBook: DbBook): Book {
+  const status = dbBook.status ? 
+    (dbBook.status === 'to_read' ? 'wishlist' : 
+     dbBook.status === 'in_progress' ? 'reading' : 
+     dbBook.status === 'finished' ? 'completed' : 'wishlist') : 
+    'wishlist';
+  
+  // Format date consistently
+  const dateAdded = dbBook.date_added ? 
+    new Date(dbBook.date_added).toISOString().split('T')[0] : 
+    new Date().toISOString().split('T')[0];
+  
+  // Handle the case where imageUrl is available but coverUrl isn't
+  const imageUrl = dbBook.image_url || dbBook.imageUrl || null;
+  
   return {
-    id: dbBook.id,
-    title: dbBook.title,
+    id: dbBook.id || '',
+    title: dbBook.title || '',
     author: dbBook.author || '',
     description: dbBook.description || '',
-    rating: dbBook.rating ?? undefined,
-    status: dbBook.status === 'WISHLIST' ? 'wishlist' : 
-            dbBook.status === 'IN_PROGRESS' ? 'reading' : 'completed',
-    source: (dbBook.bookSource?.toLowerCase() || 'physical') as "amazon" | "kindle" | "kobo" | "physical",
-    coverUrl: dbBook.imageUrl || undefined, // Map imageUrl from DB to coverUrl for UI
-    dateAdded: dbBook.dateAdded ? dbBook.dateAdded.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    rating: dbBook.rating !== undefined ? Number(dbBook.rating) : undefined,
+    status: status as "wishlist" | "reading" | "completed",
+    source: (dbBook.source || 'physical') as "amazon" | "kindle" | "kobo" | "physical",
+    coverUrl: imageUrl,
+    imageUrl: imageUrl,
+    dateAdded,
     isbn: dbBook.isbn || undefined,
-    pageCount: dbBook.pageCount ?? undefined,
+    pageCount: dbBook.page_count !== undefined ? Number(dbBook.page_count) : undefined,
     publisher: dbBook.publisher || undefined,
-    publishedDate: dbBook.publishedDate || undefined,
-    currentPage: dbBook.currentPage ?? undefined,
+    publishedDate: dbBook.published_date || undefined,
+    currentPage: dbBook.current_page !== undefined ? Number(dbBook.current_page) : undefined,
   };
 }
 
-// Helper function to map from UI book form data to database book
+// Helper function to map from UI book to database book
 export function mapUiBookToDbBook(bookData: BookFormData, existingBook?: Partial<DbBook>): DbBook {
-  const dbBook = { ...(existingBook || {}), id: existingBook?.id || '' } as DbBook;
-  
-  if (bookData.title) dbBook.title = bookData.title;
-  if (bookData.description !== undefined) dbBook.description = bookData.description || null;
-  if (bookData.author) dbBook.author = bookData.author;
-  
-  // Map status
+  const dbBook: DbBook = {
+    id: existingBook?.id || crypto.randomUUID(),
+    title: bookData.title,
+    author: bookData.author || null,
+    description: bookData.description || null,
+    rating: bookData.rating !== undefined ? bookData.rating : null,
+    ...existingBook
+  };
+
+  // Status mapping
   if (bookData.status) {
     const statusMap = {
-      'wishlist': 'WISHLIST',
-      'reading': 'IN_PROGRESS',
-      'completed': 'COMPLETED',
+      'wishlist': 'to_read',
+      'reading': 'in_progress',
+      'completed': 'finished'
     } as const;
     dbBook.status = statusMap[bookData.status];
   }
-  
-  // Map source
+
+  // Source mapping
   if (bookData.source) {
-    const sourceMap = {
-      'amazon': 'AMAZON',
-      'kindle': 'KINDLE',
-      'kobo': 'KOBO',
-      'physical': 'PHYSICAL',
-    } as const;
     dbBook.source = bookData.source.toUpperCase();
-    dbBook.bookSource = sourceMap[bookData.source];
   }
   
-  // Map coverUrl to imageUrl for DB
-  if (bookData.coverUrl !== undefined) dbBook.imageUrl = bookData.coverUrl || null;
-  
+  // Cover URL (handle either coverUrl or imageUrl)
+  if (bookData.coverUrl) {
+    dbBook.image_url = bookData.coverUrl;
+  }
+
   // Other fields
   if (bookData.isbn !== undefined) dbBook.isbn = bookData.isbn || null;
-  if (bookData.pageCount !== undefined) dbBook.pageCount = bookData.pageCount || null;
+  if (bookData.pageCount !== undefined) dbBook.page_count = bookData.pageCount || null;
   if (bookData.publisher !== undefined) dbBook.publisher = bookData.publisher || null;
-  if (bookData.publishedDate !== undefined) dbBook.publishedDate = bookData.publishedDate || null;
-  if (bookData.currentPage !== undefined) dbBook.currentPage = bookData.currentPage || null;
-  if (bookData.rating !== undefined) dbBook.rating = bookData.rating || null;
+  if (bookData.publishedDate !== undefined) dbBook.published_date = bookData.publishedDate || null;
+  if (bookData.currentPage !== undefined) dbBook.current_page = bookData.currentPage || null;
   
-  // Always update the dateUpdated field
+  // Update timestamp
   dbBook.dateUpdated = new Date();
   
   return dbBook;
