@@ -37,7 +37,7 @@ interface IMediaBase {
 
 ### Phase 1: Foundation (MVP)
 
-#### Basic UI Components ✓
+#### Basic UI Components
 
 - [x] Create homepage with category dashboard
 - [x] Set up basic category page layout (Books)
@@ -85,11 +85,48 @@ interface IMediaBase {
   - [x] Cover art support
   - [x] Placeholder images
 - [x] Films & TV
-- [ ] Video Games
+  - [x] List view
+  - [x] Add form
+  - [x] Poster art support
+  - [x] Placeholder images
+- [x] Video Games
+  - [x] List view
+  - [x] Add form
+  - [x] Cover art support
+  - [x] Platform tags
+  - [x] Playtime tracking
+  - [x] Completion status (Completed, Abandoned, etc.)
+  - [x] Placeholder images
 - [ ] Board Games
+  - [ ] List view
+  - [ ] Add form
+  - [ ] Box art support
+  - [ ] Player count info
+  - [ ] Play time info
+  - [ ] Complexity rating
+  - [ ] Placeholder images
 - [ ] Podcasts
+  - [ ] List view
+  - [ ] Add form
+  - [ ] Cover art support
+  - [ ] Episode tracking
+  - [ ] Subscription status
+  - [ ] Placeholder images
 - [ ] YouTube
+  - [ ] List view
+  - [ ] Add form
+  - [ ] Thumbnail support
+  - [ ] Channel grouping
+  - [ ] Watch status tracking
+  - [ ] Placeholder images
 - [ ] Places
+  - [ ] List view
+  - [ ] Add form
+  - [ ] Map integration
+  - [ ] Photo support
+  - [ ] Visit date tracking
+  - [ ] Location categories (Restaurant, Attraction, etc.)
+  - [ ] Placeholder images
 
 #### Database Setup
 
