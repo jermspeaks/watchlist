@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -14,25 +14,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Calendar } from "@/components/ui/calendar"
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { ArrowLeftIcon } from "@radix-ui/react-icons"
-import Link from "next/link"
+} from "@/components/ui/popover";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const podcastFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -47,9 +48,9 @@ const podcastFormSchema = z.object({
   currentEpisode: z.number().min(0).optional(),
   rating: z.number().min(0).max(5).optional(),
   isSubscribed: z.boolean().default(false),
-})
+});
 
-type PodcastFormValues = z.infer<typeof podcastFormSchema>
+type PodcastFormValues = z.infer<typeof podcastFormSchema>;
 
 const defaultValues: Partial<PodcastFormValues> = {
   status: "wishlist",
@@ -60,28 +61,28 @@ const defaultValues: Partial<PodcastFormValues> = {
   episodeCount: 0,
   currentEpisode: 0,
   isSubscribed: false,
-}
+};
 
 export default function AddPodcastPage() {
-  const router = useRouter()
-  const [isPending, setIsPending] = useState(false)
+  const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
 
   const form = useForm<PodcastFormValues>({
     resolver: zodResolver(podcastFormSchema),
     defaultValues,
-  })
+  });
 
   async function onSubmit(data: PodcastFormValues) {
-    setIsPending(true)
-    
+    setIsPending(true);
+
     // This would normally send data to an API or database
-    console.log("Form submitted:", data)
-    
+    console.log("Form submitted:", data);
+
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    
-    setIsPending(false)
-    router.push("/podcasts")
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setIsPending(false);
+    router.push("/podcasts");
   }
 
   return (
@@ -136,7 +137,10 @@ export default function AddPodcastPage() {
                   <FormItem>
                     <FormLabel>Publisher</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter publisher name (optional)" {...field} />
+                      <Input
+                        placeholder="Enter publisher name (optional)"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -352,5 +356,5 @@ export default function AddPodcastPage() {
         </Form>
       </div>
     </div>
-  )
-} 
+  );
+}
