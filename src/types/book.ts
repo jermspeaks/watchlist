@@ -86,6 +86,14 @@ export function mapDbBookToUiBook(dbBook: DbBook): Book {
   // Handle the case where imageUrl is available but coverUrl isn't
   const imageUrl = dbBook.image_url || null;
   
+  // Map source from database format to UI format
+  const source = dbBook.source ? 
+    (dbBook.source === 'AMAZON' ? 'amazon' : 
+     dbBook.source === 'KINDLE' ? 'kindle' : 
+     dbBook.source === 'KOBO' ? 'kobo' : 
+     dbBook.source === 'PHYSICAL' ? 'physical' : 'physical') : 
+    'physical';
+  
   return {
     id: dbBook.id || '',
     title: dbBook.title || '',
@@ -93,7 +101,7 @@ export function mapDbBookToUiBook(dbBook: DbBook): Book {
     description: dbBook.description || '',
     rating: dbBook.rating !== undefined ? Number(dbBook.rating) : undefined,
     status: status as "wishlist" | "reading" | "completed",
-    source: (dbBook.source || 'physical') as "amazon" | "kindle" | "kobo" | "physical",
+    source: source as "amazon" | "kindle" | "kobo" | "physical",
     coverUrl: imageUrl || undefined,
     imageUrl: imageUrl || undefined,
     dateAdded,
