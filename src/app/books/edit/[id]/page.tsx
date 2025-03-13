@@ -238,6 +238,7 @@ export default function EditBookPage({ params }: { params: { id: string } }) {
                         <SelectItem value="kindle">Kindle</SelectItem>
                         <SelectItem value="kobo">Kobo</SelectItem>
                         <SelectItem value="physical">Physical</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

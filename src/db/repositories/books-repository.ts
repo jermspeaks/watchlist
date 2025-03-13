@@ -1,7 +1,7 @@
-import { BaseRepository } from './base-repository';
-import { books, mediaItems } from '../schema';
-import { db } from '../index';
-import { eq, like, desc, asc, sql, and } from 'drizzle-orm';
+import { BaseRepository } from "./base-repository";
+import { books, mediaItems } from "../schema";
+import { db } from "../index";
+import { eq, like, desc, asc, sql, and } from "drizzle-orm";
 import {
   Book,
   DbBook,
@@ -11,7 +11,7 @@ import {
   mapDbBookToUiBook,
   mapUiBookToDbBook,
   BookFormData,
-} from '@/types/book';
+} from "@/types/book";
 
 // Create a custom repository that extends BaseRepository but overrides the types
 export class BooksRepository extends BaseRepository<Book> {
@@ -343,42 +343,45 @@ export class BooksRepository extends BaseRepository<Book> {
 
   // Helper to map joined results to a Book object
   private mapToBook(result: Record<string, unknown>): Book {
-    const mediaItem = result.media_items as Record<string, unknown>;
-    const book = result.books as Record<string, unknown> | null;
+    // console.info("mapToBook", JSON.stringify(result, undefined, 0));
+    const mediaItem = result.media_items as Partial<Book>;
+    const book = result.books as Partial<Book>;
 
+    // const bookData = { ...book, ...mediaItem } as Book;
     const dbBook: DbBook = {
       id: mediaItem.id as string,
       title: mediaItem.title as string,
       description: mediaItem.description as string | null,
-      aiDescription: mediaItem.ai_description as string | null,
+      aiDescription: mediaItem.aiDescription as string | null,
       rating: mediaItem.rating as number | null,
       ranking: mediaItem.ranking as number | null,
       tags: mediaItem.tags as string[],
       author: mediaItem.author as string | null,
       status: mediaItem.status as DbBookStatus,
       source: mediaItem.source as DbBookSource | null,
-      source_url: mediaItem.source_url as string | null,
+      source_url: mediaItem.sourceUrl as string | null,
       image_url: mediaItem.imageUrl as string | null,
-      dateAdded: mediaItem.date_added as Date,
-      dateUpdated: mediaItem.date_updated as Date,
-      mediaType: mediaItem.media_type as string,
+      dateAdded: mediaItem.dateAdded as Date,
+      dateUpdated: mediaItem.dateUpdated as Date,
+      mediaType: mediaItem.mediaType as string,
       // Book-specific fields
       isbn: book?.isbn as string | null,
       isbn13: book?.isbn13 as string | null,
-      page_count: book?.page_count as number | null,
+      page_count: book?.pageCount as number | null,
       publisher: book?.publisher as string | null,
-      published_date: book?.published_date as string | null,
+      published_date: book?.publishedDate as string | null,
       format: book?.format as BookFormat | null,
       bookSource: book?.source as DbBookSource | null,
       language: book?.language as string | null,
-      current_page: book?.current_page as number | null,
+      current_page: book?.currentPage as number | null,
       series: book?.series as string | null,
-      series_position: book?.series_position as number | null,
+      series_position: book?.seriesPosition as number | null,
       edition: book?.edition as string | null,
       translator: book?.translator as string | null,
     };
 
-    // Use the helper function from types/book.ts to map to UI Book
+    // // Use the helper function from types/book.ts to map to UI Book
+    // return bookData;
     return mapDbBookToUiBook(dbBook);
   }
 }

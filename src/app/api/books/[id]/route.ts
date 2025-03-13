@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { BooksRepository } from '@/db/repositories/books-repository';
-import type { Book as DbBook } from '@/db/repositories/books-repository';
-import { mapDbBookToUiBook, mapUiBookToDbBook } from '@/types/book';
 
 // Create an instance of the books repository
 const booksRepository = new BooksRepository();
@@ -29,14 +27,8 @@ export async function GET(
         { status: 404 }
       );
     }
-    
-    // Map database book to UI book using our helper function
-    const formattedBook = mapDbBookToUiBook({
-      ...book,
-      imageUrl: book.imageUrl || null
-    } as import('@/types/book').DbBook);
-    
-    return NextResponse.json(formattedBook);
+    console.info('GET /api/books/[id]', JSON.stringify(book, undefined, 0));
+    return NextResponse.json(book);
   } catch (error) {
     console.error('Error fetching book:', error);
     return NextResponse.json(
@@ -62,11 +54,8 @@ export async function PATCH(
     
     const bookData = await request.json();
     
-    // Map UI data to database data using our helper function
-    const dbBook = mapUiBookToDbBook(bookData);
-    
     // Update book in the database
-    const updatedBook = await booksRepository.update(id, dbBook as Partial<DbBook>);
+    const updatedBook = await booksRepository.update(id, bookData);
     
     if (!updatedBook) {
       return NextResponse.json(

@@ -25,8 +25,8 @@ export interface Book {
   sourceUrl?: string;
   coverUrl?: string; // We use coverUrl consistently in the UI
   imageUrl?: string; // For backward compatibility
-  dateAdded: string;
-  dateUpdated?: string;
+  dateAdded: Date;
+  dateUpdated?: Date;
   mediaType?: string;
   // Book-specific fields
   isbn?: string;
@@ -128,7 +128,7 @@ export interface BookFormData {
 // Helper function to map from database book to UI book
 export function mapDbBookToUiBook(dbBook: DbBook): Book {
   // Status mapping
-  const status = dbBook.status ? 
+  const status: BookStatus = dbBook.status ? 
     (dbBook.status === 'WISHLIST' ? 'wishlist' : 
      dbBook.status === 'IN_PROGRESS' ? 'reading' : 
      dbBook.status === 'COMPLETED' ? 'completed' : 'wishlist') : 
@@ -147,7 +147,7 @@ export function mapDbBookToUiBook(dbBook: DbBook): Book {
   const imageUrl = dbBook.image_url || null;
   
   // Map source from database format to UI format
-  const source = dbBook.source ? 
+  const source: BookSource = dbBook.source ? 
     (dbBook.source === 'AMAZON' ? 'amazon' : 
      dbBook.source === 'KINDLE' ? 'kindle' : 
      dbBook.source === 'KOBO' ? 'kobo' : 
@@ -169,13 +169,13 @@ export function mapDbBookToUiBook(dbBook: DbBook): Book {
     rating: dbBook.rating !== null && dbBook.rating !== undefined ? Number(dbBook.rating) : undefined,
     ranking: dbBook.ranking !== null && dbBook.ranking !== undefined ? Number(dbBook.ranking) : undefined,
     tags: dbBook.tags || undefined,
-    status: status as BookStatus,
-    source: source as BookSource,
+    status: status,
+    source: source,
     sourceUrl: dbBook.source_url || undefined,
     coverUrl: imageUrl || undefined,
     imageUrl: imageUrl || undefined,
-    dateAdded,
-    dateUpdated,
+    dateAdded: new Date(dateAdded),
+    dateUpdated: dateUpdated ? new Date(dateUpdated) : undefined,
     mediaType: dbBook.mediaType || undefined,
     isbn: dbBook.isbn || undefined,
     isbn13: dbBook.isbn13 || undefined,
