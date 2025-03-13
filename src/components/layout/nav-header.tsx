@@ -10,7 +10,7 @@ export function NavHeader() {
           <Link href="/">
             <Button variant="ghost" className="flex items-center space-x-2">
               <HomeIcon className="h-5 w-5" />
-              <span className="font-semibold">Media Watchlist</span>
+              <span className="font-semibold">Watchlist</span>
             </Button>
           </Link>
         </nav>

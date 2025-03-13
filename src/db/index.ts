@@ -1,9 +1,6 @@
 import { drizzle } from 'drizzle-orm/neon-serverless';
-import { neon, neonConfig } from '@neondatabase/serverless';
+import { neon } from '@neondatabase/serverless';
 import { Pool } from '@neondatabase/serverless';
-
-// This is needed for Neon serverless to work with Next.js
-neonConfig.fetchConnectionCache = true;
 
 // Check if we have a database URL
 if (!process.env.DATABASE_URL) {

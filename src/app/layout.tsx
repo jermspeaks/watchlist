@@ -6,7 +6,7 @@ import { NavHeader } from '@/components/layout/nav-header'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Media Watchlist',
+  title: 'Watchlist',
   description: 'Track and manage your media consumption across different categories',
 }
 

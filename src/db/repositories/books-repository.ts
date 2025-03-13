@@ -1,7 +1,7 @@
 import { BaseRepository } from './base-repository';
 import { books, mediaItems } from '../schema';
 import { db } from '../index';
-import { eq, and, like, desc, asc, sql } from 'drizzle-orm';
+import { eq, like, desc, asc, sql } from 'drizzle-orm';
 
 // Define the Book type based on our schema
 export interface Book {
@@ -196,12 +196,12 @@ export class BooksRepository extends BaseRepository<Book> {
   // Helper to map joined results to a Book object
   private mapToBook(result: any): Book {
     // Log the raw database row to see what's being received
-    console.log('Raw DB row:', {
-      id: result.media_items?.id,
-      title: result.media_items?.title,
-      imageUrl: result.media_items?.imageUrl,
-      hasImageUrl: !!result.media_items?.imageUrl
-    });
+    // console.log('Raw DB row:', {
+    //   id: result.media_items?.id,
+    //   title: result.media_items?.title,
+    //   imageUrl: result.media_items?.imageUrl,
+    //   hasImageUrl: !!result.media_items?.imageUrl
+    // });
     
     const mediaItem = result.media_items;
     const book = result.books;

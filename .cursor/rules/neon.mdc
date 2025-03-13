@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+The `fetchConnectionCache` option is deprecated (now always `true`)
