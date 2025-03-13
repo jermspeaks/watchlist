@@ -1,90 +1,78 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import { MediaCard } from "@/components/media-card"
-import { CatalogueFilters } from "@/components/catalogue-filters"
-import type { MediaItem, FilterState } from "@/types/catalogue"
+import Link from "next/link"
+import { Card } from "@/components/ui/card"
 
-// This would typically come from an API or database
-const SAMPLE_ITEMS: MediaItem[] = [
+// Define media categories with their routes and descriptions
+const MEDIA_CATEGORIES = [
   {
-    id: "1",
-    title: "Trials of Mana",
-    creator: "Square Enix",
-    type: "game",
-    rating: 5,
-    imageUrl: "https://global-img.gamergen.com/trials-of-mana-2019-06-11-19-014_0900926689.jpg",
-    date: "2020-04-24",
+    title: "Books",
+    description: "Track books from Amazon, Kindle, Kobo, and physical collection",
+    href: "/books",
+    icon: "📚",
   },
   {
-    id: "2",
-    title: "Trials of Mana",
-    creator: "Square Enix",
-    type: "game",
-    rating: 5,
-    imageUrl: "https://global-img.gamergen.com/trials-of-mana-2019-06-11-19-014_0900926689.jpg",
-    date: "2020-04-24",
+    title: "Films & TV",
+    description: "Movies and TV shows from various sources including Letterboxd and personal archives",
+    href: "/films",
+    icon: "🎬",
+  },
+  {
+    title: "Video Games",
+    description: "Games from Steam and personal collection",
+    href: "/games",
+    icon: "🎮",
+  },
+  {
+    title: "Board Games",
+    description: "Physical board games and BGG wishlist",
+    href: "/board-games",
+    icon: "🎲",
+  },
+  {
+    title: "Podcasts",
+    description: "Podcast subscriptions and episodes to listen",
+    href: "/podcasts",
+    icon: "🎧",
+  },
+  {
+    title: "YouTube",
+    description: "YouTube channels, playlists, and watch later",
+    href: "/youtube",
+    icon: "▶️",
+  },
+  {
+    title: "Places",
+    description: "Restaurants to try and places to visit",
+    href: "/places",
+    icon: "📍",
   },
 ]
 
-export default function CataloguePage() {
-  const [filters, setFilters] = useState<FilterState>({
-    search: "",
-    type: "all",
-    rating: "all",
-    sort: "date",
-  })
-
-  const filteredItems = useMemo(() => {
-    return SAMPLE_ITEMS.filter((item) => {
-      if (filters.search && !item.title.toLowerCase().includes(filters.search.toLowerCase())) {
-        return false
-      }
-      if (filters.type !== "all" && item.type !== filters.type) {
-        return false
-      }
-      if (filters.rating !== "all" && item.rating < Number.parseInt(filters.rating)) {
-        return false
-      }
-      return true
-    }).sort((a, b) => {
-      switch (filters.sort) {
-        case "title":
-          return a.title.localeCompare(b.title)
-        case "rating":
-          return b.rating - a.rating
-        case "date":
-        default:
-          return new Date(b.date).getTime() - new Date(a.date).getTime()
-      }
-    })
-  }, [filters])
-
-  const handleFilterChange = (key: keyof FilterState, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-  }
-
+export default function HomePage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
-        <div>
-          <h1 className="mb-2 text-3xl font-bold tracking-tight">Catalogue</h1>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold tracking-tight">Media Watchlist</h1>
           <p className="text-lg text-muted-foreground">
-            This page lists games, books, shows... you know, things, I&apos;ve watched, played, read, listened to. Each
-            entry includes a description and some metadata. Below are some filters you can use.
+            Track and manage your media consumption across different categories
           </p>
         </div>
 
-        <CatalogueFilters
-          filters={filters}
-          totalEntries={SAMPLE_ITEMS.length}
-          currentEntries={filteredItems.length}
-          onFilterChange={handleFilterChange}
-        />
-
-        <div className="grid gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {filteredItems.map((item) => (
-            <MediaCard key={item.id} item={item} />
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {MEDIA_CATEGORIES.map((category) => (
+            <Link key={category.href} href={category.href}>
+              <Card className="h-full p-6 transition-colors hover:bg-muted/50">
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">{category.icon}</span>
+                    <h2 className="text-2xl font-semibold">{category.title}</h2>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{category.description}</p>
+                </div>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
