@@ -24,7 +24,10 @@ export async function GET(
     }
     
     // Map database book to UI book using our helper function
-    const formattedBook = mapDbBookToUiBook(book as unknown as import('@/types/book').DbBook);
+    const formattedBook = mapDbBookToUiBook({
+      ...book,
+      imageUrl: book.imageUrl || null
+    } as import('@/types/book').DbBook);
     
     return NextResponse.json(formattedBook);
   } catch (error) {
@@ -48,7 +51,7 @@ export async function PATCH(
     const dbBook = mapUiBookToDbBook(bookData);
     
     // Update book in the database
-    await booksRepository.update(id, dbBook as unknown as Partial<Omit<DbBook, 'id'>>);
+    await booksRepository.update(id, dbBook as unknown as Partial<DbBook>);
     
     return NextResponse.json({ success: true });
   } catch (error) {

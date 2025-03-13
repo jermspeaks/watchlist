@@ -51,7 +51,13 @@ export async function GET(request: NextRequest) {
     });
     
     // Map database books to UI books using our helper function
-    const books = result.data.map(book => mapDbBookToUiBook(book as unknown as import('@/types/book').DbBook));
+    const books = result.data.map(book => {
+      // Ensure imageUrl is properly mapped to coverUrl
+      return mapDbBookToUiBook({
+        ...book,
+        imageUrl: book.imageUrl || null
+      } as import('@/types/book').DbBook);
+    });
     
     return NextResponse.json({
       books,
