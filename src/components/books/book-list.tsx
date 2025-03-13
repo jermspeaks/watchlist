@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Image from "next/image"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -11,12 +12,14 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 import {
   StarFilledIcon,
   LayoutIcon,
@@ -24,9 +27,13 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   BookmarkIcon,
+  ReloadIcon,
+  TrashIcon,
+  Pencil1Icon,
 } from "@radix-ui/react-icons"
+import { Dispatch, SetStateAction } from "react"
 
-interface Book {
+export interface Book {
   id: string
   title: string
   author: string
@@ -36,101 +43,50 @@ interface Book {
   source: "amazon" | "kindle" | "kobo" | "physical"
   coverUrl?: string
   dateAdded: string
+  isbn?: string
+  pageCount?: number
+  publisher?: string
+  publishedDate?: string
+  currentPage?: number
 }
 
-interface BookListProps {
-  searchQuery: string
-  statusFilter: string
-  sourceFilter: string
+export interface BookListProps {
+  books: Book[]
+  isLoading: boolean
+  totalBooks: number
+  currentPage: number
+  totalPages: number
+  sortBy: string
+  sortDirection: "asc" | "desc"
+  onPageChange: (page: number) => void
+  onSortChange: (field: string) => void
+  onDeleteBook?: Dispatch<SetStateAction<string | null>>
 }
 
-type SortField = "title" | "author" | "rating" | "dateAdded"
-type SortDirection = "asc" | "desc"
-
-const ITEMS_PER_PAGE = 12
-
-// Temporary sample data - will be replaced with actual data from database
-const SAMPLE_BOOKS: Book[] = [
-  {
-    id: "1",
-    title: "The Pragmatic Programmer",
-    author: "David Thomas, Andrew Hunt",
-    description: "Your journey to mastery, 20th Anniversary Edition. From journeyman to master programmer.",
-    rating: 5,
-    status: "completed",
-    source: "physical",
-    dateAdded: "2024-03-13",
-    coverUrl: "https://m.media-amazon.com/images/I/510NRcB7AAL._SL500_.jpg"
-  },
-  {
-    id: "2",
-    title: "Clean Code",
-    author: "Robert C. Martin",
-    description: "A handbook of agile software craftsmanship that has helped countless programmers write better code.",
-    rating: 4,
-    status: "reading",
-    source: "kindle",
-    dateAdded: "2024-03-12",
-    coverUrl: "https://m.media-amazon.com/images/I/41bOkXnNBjL._SL500_.jpg"
-  },
-]
-
-export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListProps) {
+export function BookList({
+  books,
+  isLoading,
+  totalBooks,
+  currentPage,
+  totalPages,
+  sortBy,
+  sortDirection,
+  onPageChange,
+  onSortChange,
+  onDeleteBook,
+}: BookListProps) {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid")
-  const [sortField, setSortField] = useState<SortField>("dateAdded")
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc")
-  const [currentPage, setCurrentPage] = useState(1)
 
-  const toggleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-    } else {
-      setSortField(field)
-      setSortDirection("asc")
-    }
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <ReloadIcon className="h-6 w-6 animate-spin mr-2" />
+        <p>Loading books...</p>
+      </div>
+    )
   }
 
-  const sortedAndFilteredBooks = SAMPLE_BOOKS
-    .filter((book) => {
-      if (
-        searchQuery &&
-        !book.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !book.author.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !book.description.toLowerCase().includes(searchQuery.toLowerCase())
-      ) {
-        return false
-      }
-      if (statusFilter !== "all" && book.status !== statusFilter) {
-        return false
-      }
-      if (sourceFilter !== "all" && book.source !== sourceFilter) {
-        return false
-      }
-      return true
-    })
-    .sort((a, b) => {
-      const direction = sortDirection === "asc" ? 1 : -1
-      switch (sortField) {
-        case "title":
-          return direction * a.title.localeCompare(b.title)
-        case "author":
-          return direction * a.author.localeCompare(b.author)
-        case "rating":
-          return direction * ((a.rating || 0) - (b.rating || 0))
-        case "dateAdded":
-          return direction * (new Date(a.dateAdded).getTime() - new Date(b.dateAdded).getTime())
-        default:
-          return 0
-      }
-    })
-
-  const totalPages = Math.ceil(sortedAndFilteredBooks.length / ITEMS_PER_PAGE)
-  const paginatedBooks = sortedAndFilteredBooks.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  )
-
-  if (sortedAndFilteredBooks.length === 0) {
+  if (books.length === 0) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">No books found matching your filters.</p>
@@ -138,14 +94,14 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
     )
   }
 
-  const SortButton = ({ field, label }: { field: SortField; label: string }) => (
+  const SortButton = ({ field, label }: { field: string; label: string }) => (
     <Button
       variant="ghost"
       className="flex items-center space-x-1"
-      onClick={() => toggleSort(field)}
+      onClick={() => onSortChange(field)}
     >
       <span>{label}</span>
-      {sortField === field && (
+      {sortBy === field && (
         <span className="ml-1">{sortDirection === "asc" ? <ArrowUpIcon /> : <ArrowDownIcon />}</span>
       )}
     </Button>
@@ -155,29 +111,11 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <Select value={sortField} onValueChange={(value) => setSortField(value as SortField)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="title">Title</SelectItem>
-              <SelectItem value="author">Author</SelectItem>
-              <SelectItem value="rating">Rating</SelectItem>
-              <SelectItem value="dateAdded">Date Added</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
-          >
-            {sortDirection === "asc" ? <ArrowUpIcon /> : <ArrowDownIcon />}
-          </Button>
+          <span className="text-sm text-muted-foreground">
+            {totalBooks} {totalBooks === 1 ? 'book' : 'books'}
+          </span>
         </div>
         <div className="flex items-center space-x-4">
-          <span className="text-sm text-muted-foreground">
-            {sortedAndFilteredBooks.length} items
-          </span>
           <div className="flex space-x-2">
             <Button
               variant={viewMode === "grid" ? "default" : "outline"}
@@ -199,12 +137,12 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
 
       {viewMode === "grid" ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {paginatedBooks.map((book) => (
+          {books.map((book) => (
             <Card key={book.id} className="p-4">
               <div className="space-y-3">
                 <div className="aspect-[2/3] relative bg-muted rounded-md overflow-hidden">
                   {book.coverUrl ? (
-                    <img
+                    <Image
                       src={book.coverUrl}
                       alt={`Cover of ${book.title}`}
                       className="w-full h-full object-cover"
@@ -234,6 +172,21 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
                   </Badge>
                   <Badge variant="outline">{book.source}</Badge>
                 </div>
+                {onDeleteBook && (
+                  <div className="flex justify-end space-x-2 pt-2">
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Pencil1Icon className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-destructive hover:text-destructive"
+                      onClick={() => onDeleteBook(book.id)}
+                    >
+                      <TrashIcon className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
             </Card>
           ))}
@@ -249,24 +202,31 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
                 <TableHead>
                   <SortButton field="author" label="Author" />
                 </TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Source</TableHead>
                 <TableHead>
                   <SortButton field="rating" label="Rating" />
                 </TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Source</TableHead>
                 <TableHead>
-                  <SortButton field="dateAdded" label="Added" />
+                  <SortButton field="dateAdded" label="Date Added" />
                 </TableHead>
+                {onDeleteBook && <TableHead>Actions</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedBooks.map((book) => (
+              {books.map((book) => (
                 <TableRow key={book.id}>
                   <TableCell className="font-medium">{book.title}</TableCell>
                   <TableCell>{book.author}</TableCell>
-                  <TableCell className="max-w-md">
-                    <p className="line-clamp-2">{book.description}</p>
+                  <TableCell>
+                    {book.rating ? (
+                      <div className="flex items-center">
+                        <StarFilledIcon className="h-4 w-4 text-yellow-400 mr-1" />
+                        {book.rating}
+                      </div>
+                    ) : (
+                      "-"
+                    )}
                   </TableCell>
                   <TableCell>
                     <Badge variant={book.status === "completed" ? "default" : "secondary"}>
@@ -276,15 +236,24 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
                   <TableCell>
                     <Badge variant="outline">{book.source}</Badge>
                   </TableCell>
-                  <TableCell>
-                    {book.rating && (
-                      <div className="flex items-center">
-                        <StarFilledIcon className="h-4 w-4 text-yellow-400" />
-                        <span className="ml-1">{book.rating}</span>
-                      </div>
-                    )}
-                  </TableCell>
                   <TableCell>{new Date(book.dateAdded).toLocaleDateString()}</TableCell>
+                  {onDeleteBook && (
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Pencil1Icon className="h-4 w-4" />
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => onDeleteBook(book.id)}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -293,33 +262,81 @@ export function BookList({ searchQuery, statusFilter, sourceFilter }: BookListPr
       )}
 
       {totalPages > 1 && (
-        <div className="flex justify-center space-x-2 mt-6">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <div className="flex items-center space-x-2">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <Button
-                key={i + 1}
-                variant={currentPage === i + 1 ? "default" : "outline"}
-                onClick={() => setCurrentPage(i + 1)}
-              >
-                {i + 1}
-              </Button>
-            ))}
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
-        </div>
+        <Pagination className="mt-6">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPageChange(Math.max(1, currentPage - 1));
+                }}
+                aria-disabled={currentPage === 1}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+            
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              // Show pages around current page
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+              
+              return (
+                <PaginationItem key={pageNum}>
+                  <PaginationLink
+                    href="#"
+                    isActive={pageNum === currentPage}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onPageChange(pageNum);
+                    }}
+                  >
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+            
+            {totalPages > 5 && currentPage < totalPages - 2 && (
+              <>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onPageChange(totalPages);
+                    }}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+            
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onPageChange(Math.min(totalPages, currentPage + 1));
+                }}
+                aria-disabled={currentPage === totalPages}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
     </div>
   )
