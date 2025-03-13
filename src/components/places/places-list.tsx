@@ -1,6 +1,6 @@
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -8,15 +8,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   StarFilledIcon,
   LayoutIcon,
@@ -25,12 +25,12 @@ import {
   ArrowDownIcon,
   CalendarIcon,
   Pencil1Icon,
-} from "@radix-ui/react-icons"
-import { MapPin, Globe } from "lucide-react"
-import { PlacesPlaceholder } from "./places-placeholder"
-import { DeleteDialog } from "@/components/delete-dialog"
-import { StatusUpdate } from "@/components/status-update"
-import Link from "next/link"
+} from "@radix-ui/react-icons";
+import { MapPin, Globe } from "lucide-react";
+import { PlacesPlaceholder } from "./places-placeholder";
+import { DeleteDialog } from "@/components/delete-dialog";
+import { StatusUpdate } from "@/components/status-update";
+import Link from "next/link";
 
 // Define the Place item type
 interface Place {
@@ -84,7 +84,8 @@ const SAMPLE_PLACES: Place[] = [
   {
     id: "1",
     title: "Eiffel Tower",
-    description: "Iconic iron tower located on the Champ de Mars in Paris, France.",
+    description:
+      "Iconic iron tower located on the Champ de Mars in Paris, France.",
     category: "attraction",
     address: "Champ de Mars, 5 Avenue Anatole France",
     city: "Paris",
@@ -94,7 +95,8 @@ const SAMPLE_PLACES: Place[] = [
       latitude: 48.8584,
       longitude: 2.2945,
     },
-    photoUrl: "https://images.unsplash.com/photo-1543349689-9a4d426bee8e?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1543349689-9a4d426bee8e?q=80&w=1000",
     website: "https://www.toureiffel.paris/en",
     priceRange: "moderate",
     rating: 5,
@@ -115,13 +117,15 @@ const SAMPLE_PLACES: Place[] = [
       latitude: 40.7812,
       longitude: -73.9665,
     },
-    photoUrl: "https://images.unsplash.com/photo-1534251369789-5067c8b8602a?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1534251369789-5067c8b8602a?q=80&w=1000",
     website: "https://www.centralparknyc.org/",
     rating: 4,
     visitDate: "2022-06-15",
     status: "completed",
     tags: ["park", "nature", "recreation"],
-    notes: "Beautiful in summer, visited the Bethesda Fountain and Strawberry Fields.",
+    notes:
+      "Beautiful in summer, visited the Bethesda Fountain and Strawberry Fields.",
     locationType: "domestic",
   },
   {
@@ -134,7 +138,8 @@ const SAMPLE_PLACES: Place[] = [
     state: "NY",
     country: "USA",
     postalCode: "10014",
-    photoUrl: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?q=80&w=1000",
     website: "https://www.sushinakazawa.com/",
     phone: "+1 212-924-2212",
     priceRange: "very_expensive",
@@ -156,7 +161,8 @@ const SAMPLE_PLACES: Place[] = [
       latitude: 37.8199,
       longitude: -122.4783,
     },
-    photoUrl: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?q=80&w=1000",
     website: "https://www.goldengate.org/",
     rating: 5,
     visitDate: "2021-08-10",
@@ -168,13 +174,15 @@ const SAMPLE_PLACES: Place[] = [
   {
     id: "5",
     title: "The Coffee Bean & Tea Leaf",
-    description: "Popular coffee chain with a variety of coffee and tea options.",
+    description:
+      "Popular coffee chain with a variety of coffee and tea options.",
     category: "cafe",
     address: "123 Main St",
     city: "Los Angeles",
     state: "CA",
     country: "USA",
-    photoUrl: "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?q=80&w=1000",
     website: "https://www.coffeebean.com/",
     priceRange: "inexpensive",
     rating: 3,
@@ -186,7 +194,8 @@ const SAMPLE_PLACES: Place[] = [
   {
     id: "6",
     title: "Louvre Museum",
-    description: "World's largest art museum and a historic monument in Paris, France.",
+    description:
+      "World's largest art museum and a historic monument in Paris, France.",
     category: "museum",
     address: "Rue de Rivoli",
     city: "Paris",
@@ -196,7 +205,8 @@ const SAMPLE_PLACES: Place[] = [
       latitude: 48.8606,
       longitude: 2.3376,
     },
-    photoUrl: "https://images.unsplash.com/photo-1565099824688-e93eb20fe622?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1565099824688-e93eb20fe622?q=80&w=1000",
     website: "https://www.louvre.fr/en",
     priceRange: "moderate",
     rating: 5,
@@ -215,7 +225,8 @@ const SAMPLE_PLACES: Place[] = [
     state: "CA",
     country: "USA",
     postalCode: "90265",
-    photoUrl: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1000",
     website: "https://www.noburestaurants.com/malibu",
     phone: "+1 310-317-9140",
     priceRange: "very_expensive",
@@ -227,7 +238,8 @@ const SAMPLE_PLACES: Place[] = [
   {
     id: "8",
     title: "Griffith Observatory",
-    description: "Observatory with exhibits, a planetarium, and views of Los Angeles.",
+    description:
+      "Observatory with exhibits, a planetarium, and views of Los Angeles.",
     category: "attraction",
     address: "2800 E Observatory Rd",
     city: "Los Angeles",
@@ -238,7 +250,8 @@ const SAMPLE_PLACES: Place[] = [
       latitude: 34.1184,
       longitude: -118.3004,
     },
-    photoUrl: "https://images.unsplash.com/photo-1518533954129-7774297db60f?q=80&w=1000",
+    photoUrl:
+      "https://images.unsplash.com/photo-1518533954129-7774297db60f?q=80&w=1000",
     website: "https://www.griffithobservatory.org/",
     priceRange: "inexpensive",
     rating: 4,
@@ -247,14 +260,14 @@ const SAMPLE_PLACES: Place[] = [
     tags: ["observatory", "astronomy", "views"],
     notes: "Great views of the city, especially at sunset.",
     locationType: "local",
-  }
+  },
 ];
 
 export function PlacesList({
   searchQuery,
   statusFilter,
   categoryFilter,
-  locationFilter
+  locationFilter,
 }: PlacesListProps) {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [sortField, setSortField] = useState<SortField>("title");
@@ -275,26 +288,34 @@ export function PlacesList({
   const handleStatusUpdate = async (id: string, newStatus: string) => {
     // In a real app, this would be an API call
     await new Promise((resolve) => setTimeout(resolve, 500));
-    
-    setPlaces(places.map(place => 
-      place.id === id 
-        ? { 
-            ...place, 
-            status: newStatus as "wishlist" | "in_progress" | "completed",
-            // Clear or set dates based on new status
-            visitDate: newStatus === "completed" ? new Date().toISOString().split('T')[0] : undefined,
-            plannedDate: newStatus === "in_progress" ? new Date().toISOString().split('T')[0] : undefined
-          } 
-        : place
-    ));
+
+    setPlaces(
+      places.map((place) =>
+        place.id === id
+          ? {
+              ...place,
+              status: newStatus as "wishlist" | "in_progress" | "completed",
+              // Clear or set dates based on new status
+              visitDate:
+                newStatus === "completed"
+                  ? new Date().toISOString().split("T")[0]
+                  : undefined,
+              plannedDate:
+                newStatus === "in_progress"
+                  ? new Date().toISOString().split("T")[0]
+                  : undefined,
+            }
+          : place
+      )
+    );
   };
 
   // Handle delete
   const handleDelete = async (id: string) => {
     // In a real app, this would be an API call
     await new Promise((resolve) => setTimeout(resolve, 500));
-    
-    setPlaces(places.filter(place => place.id !== id));
+
+    setPlaces(places.filter((place) => place.id !== id));
   };
 
   const sortedAndFilteredPlaces = places
@@ -342,7 +363,10 @@ export function PlacesList({
           if (!a.visitDate && !b.visitDate) return 0;
           if (!a.visitDate) return direction;
           if (!b.visitDate) return -direction;
-          return direction * (new Date(a.visitDate).getTime() - new Date(b.visitDate).getTime());
+          return (
+            direction *
+            (new Date(a.visitDate).getTime() - new Date(b.visitDate).getTime())
+          );
         default:
           return 0;
       }
@@ -357,13 +381,21 @@ export function PlacesList({
   if (sortedAndFilteredPlaces.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">No places found matching your filters.</p>
+        <p className="text-muted-foreground">
+          No places found matching your filters.
+        </p>
       </div>
     );
   }
 
   // Helper component for sort buttons
-  const SortButton = ({ field, label }: { field: SortField; label: string }) => (
+  const SortButton = ({
+    field,
+    label,
+  }: {
+    field: SortField;
+    label: string;
+  }) => (
     <Button
       variant="ghost"
       className="flex items-center space-x-1"
@@ -418,7 +450,10 @@ export function PlacesList({
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <Select value={sortField} onValueChange={(value) => setSortField(value as SortField)}>
+          <Select
+            value={sortField}
+            onValueChange={(value) => setSortField(value as SortField)}
+          >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -433,7 +468,9 @@ export function PlacesList({
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setSortDirection(sortDirection === "asc" ? "desc" : "asc")}
+            onClick={() =>
+              setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+            }
           >
             {sortDirection === "asc" ? <ArrowUpIcon /> : <ArrowDownIcon />}
           </Button>
@@ -505,16 +542,22 @@ export function PlacesList({
                   <div className="flex items-center text-xs text-muted-foreground">
                     <CalendarIcon className="h-3 w-3 mr-1" />
                     <span>
-                      {place.visitDate 
-                        ? `Visited: ${new Date(place.visitDate).toLocaleDateString()}`
-                        : `Planned: ${new Date(place.plannedDate!).toLocaleDateString()}`}
+                      {place.visitDate
+                        ? `Visited: ${new Date(
+                            place.visitDate
+                          ).toLocaleDateString()}`
+                        : `Planned: ${new Date(
+                            place.plannedDate!
+                          ).toLocaleDateString()}`}
                     </span>
                   </div>
                 )}
                 <div className="flex flex-wrap gap-2 pt-2">
                   <StatusUpdate
                     currentStatus={place.status}
-                    onStatusChange={(newStatus) => handleStatusUpdate(place.id, newStatus)}
+                    onStatusChange={(newStatus) =>
+                      handleStatusUpdate(place.id, newStatus)
+                    }
                     statusOptions={STATUS_OPTIONS}
                     buttonVariant="secondary"
                     buttonSize="sm"
@@ -526,7 +569,8 @@ export function PlacesList({
                   )}
                   <Badge variant="outline" className="flex items-center gap-1">
                     {getLocationIcon(place.locationType)}
-                    {place.locationType.charAt(0).toUpperCase() + place.locationType.slice(1)}
+                    {place.locationType.charAt(0).toUpperCase() +
+                      place.locationType.slice(1)}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center mt-4 pt-2 border-t">
@@ -541,7 +585,11 @@ export function PlacesList({
                     itemType="places"
                     onDelete={() => handleDelete(place.id)}
                     trigger={
-                      <Button variant="ghost" size="sm" className="text-destructive">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive"
+                      >
                         Delete
                       </Button>
                     }
@@ -594,19 +642,25 @@ export function PlacesList({
                     </div>
                   </TableCell>
                   <TableCell>
-                    {place.priceRange ? formatPriceRange(place.priceRange) : "-"}
+                    {place.priceRange
+                      ? formatPriceRange(place.priceRange)
+                      : "-"}
                   </TableCell>
                   <TableCell>
-                    {place.visitDate 
+                    {place.visitDate
                       ? new Date(place.visitDate).toLocaleDateString()
                       : place.plannedDate
-                        ? `Planned: ${new Date(place.plannedDate).toLocaleDateString()}`
-                        : "-"}
+                      ? `Planned: ${new Date(
+                          place.plannedDate
+                        ).toLocaleDateString()}`
+                      : "-"}
                   </TableCell>
                   <TableCell>
                     <StatusUpdate
                       currentStatus={place.status}
-                      onStatusChange={(newStatus) => handleStatusUpdate(place.id, newStatus)}
+                      onStatusChange={(newStatus) =>
+                        handleStatusUpdate(place.id, newStatus)
+                      }
                       statusOptions={STATUS_OPTIONS}
                       buttonVariant="secondary"
                       buttonSize="sm"
@@ -633,7 +687,11 @@ export function PlacesList({
                         itemType="places"
                         onDelete={() => handleDelete(place.id)}
                         trigger={
-                          <Button variant="ghost" size="sm" className="text-destructive">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-destructive"
+                          >
                             Delete
                           </Button>
                         }
@@ -672,7 +730,9 @@ export function PlacesList({
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              onClick={() =>
+                setCurrentPage(Math.min(totalPages, currentPage + 1))
+              }
               disabled={currentPage === totalPages}
             >
               Next
@@ -682,4 +742,6 @@ export function PlacesList({
       )}
     </div>
   );
-} 
+}
+
+export default PlacesList;
