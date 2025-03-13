@@ -97,14 +97,14 @@ interface IMediaBase {
   - [x] Playtime tracking
   - [x] Completion status (Completed, Abandoned, etc.)
   - [x] Placeholder images
-- [ ] Board Games
-  - [ ] List view
-  - [ ] Add form
-  - [ ] Box art support
-  - [ ] Player count info
-  - [ ] Play time info
-  - [ ] Complexity rating
-  - [ ] Placeholder images
+- [x] Board Games
+  - [x] List view
+  - [x] Add form
+  - [x] Box art support
+  - [x] Player count info
+  - [x] Play time info
+  - [x] Complexity rating
+  - [x] Placeholder images
 - [ ] Podcasts
   - [ ] List view
   - [ ] Add form
@@ -244,3 +244,6 @@ interface IMediaBase {
 - Media detailed pages
 - Within each media page, be able to group items together into named lists
 - Build import system for chosen category
+- Add podcasts by rss feed
+- Add youtube videos by url link
+- Add articles by rss feed
