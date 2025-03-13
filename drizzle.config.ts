@@ -9,9 +9,9 @@ if (!process.env.DATABASE_URL) {
 }
 
 export default {
+  dialect: "postgresql",
   schema: './src/db/schema/*',
   out: './src/db/migrations',
-  driver: 'pg',
   dbCredentials: {
     url: process.env.DATABASE_URL,
   },
