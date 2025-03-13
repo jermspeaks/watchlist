@@ -113,12 +113,12 @@ interface IMediaBase {
   - [x] Subscription status
   - [x] Placeholder images
 - [ ] YouTube
-  - [ ] List view
-  - [ ] Add form
-  - [ ] Thumbnail support
-  - [ ] Channel grouping
-  - [ ] Watch status tracking
-  - [ ] Placeholder images
+  - [x] List view
+  - [x] Add form
+  - [x] Thumbnail support
+  - [x] Channel grouping
+  - [x] Watch status tracking
+  - [x] Placeholder images
 - [ ] Places
   - [ ] List view
   - [ ] Add form
@@ -249,6 +249,11 @@ interface IMediaBase {
 - Add articles by rss feed
 - Create a board game picker given a set of time we have and the type of gamers that we have
   - Also, this might be great with AI as well
+- YouTube fetch the latest feeds and re-make a subscriptions page that makes sense for you
+  - You can have different groups of subscriptions rather than a default feed
+- There should be a "liked videos" for Youtube that I can then organize
+- TV show calendar view where we can see the thumbnails of what is upcoming
 
 ## Bugs
+
 - Table headers are not left justified
