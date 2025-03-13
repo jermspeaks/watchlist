@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
+import { NavHeader } from '@/components/layout/nav-header'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Watchlist',
-  description: 'Supported by v0',
+  title: 'Media Watchlist',
+  description: 'Track and manage your media consumption across different categories',
 }
 
 export default function RootLayout({
@@ -13,7 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={inter.className}>
+        <div className="min-h-screen flex flex-col">
+          <NavHeader />
+          <main className="flex-1">{children}</main>
+        </div>
+      </body>
     </html>
   )
 }

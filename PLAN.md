@@ -34,11 +34,68 @@ interface IMediaBase {
 ## Feature Roadmap
 
 ### Phase 1: Foundation (MVP)
-- [ ] Basic CRUD operations for media items
-- [ ] Authentication system
-- [ ] Database setup and initial schema
-- [ ] Basic UI components
-- [ ] Category management
+### Basic UI Components ✓
+- [x] Create homepage with category dashboard
+- [x] Set up basic category page layout (Books)
+- [x] Implement basic card view for items
+- [x] Add table view option
+- [x] Implement view toggle (card/table)
+- [x] Add pagination support
+- [x] Add sorting functionality
+- [x] Add navigation header
+- [ ] Enhance search and filter capabilities
+  - [x] Basic text search
+  - [x] Status filter
+  - [x] Source filter
+  - [x] Sort by different fields
+  - [ ] Advanced filters (rating, date, etc.)
+  - [ ] Save filter preferences
+
+### CRUD Operations
+- [ ] Create operations
+  - [x] Add book form with validation
+  - [x] Manual entry support
+  - [ ] ISBN lookup integration
+  - [x] Image upload/URL support
+- [ ] Read operations
+  - [x] Basic list view
+  - [x] Grid/Table view options
+  - [ ] Detailed view page
+  - [ ] Book statistics
+- [ ] Update operations
+  - [ ] Edit book details
+  - [ ] Bulk edit support
+  - [ ] Status update shortcuts
+- [ ] Delete operations
+  - [ ] Single item delete
+  - [ ] Bulk delete support
+  - [ ] Soft delete implementation
+
+### Category Pages Setup
+- [x] Books
+  - [x] List view
+  - [x] Add form
+  - [x] Cover art support
+  - [x] Placeholder images
+- [ ] Films & TV
+- [ ] Video Games
+- [ ] Board Games
+- [ ] Podcasts
+- [ ] YouTube
+- [ ] Places
+
+### Database Setup
+- [ ] Choose and set up database
+- [ ] Design and implement schemas
+- [ ] Set up migrations
+- [ ] Add seed data
+- [ ] Implement data validation
+
+### Authentication System
+- [ ] Set up authentication provider
+- [ ] Implement login/register
+- [ ] Add user profiles
+- [ ] Set up authorization rules
 
 ### Phase 2: Import Systems
 - [ ] Books
@@ -131,4 +188,13 @@ interface IMediaBase {
 3. Implement authentication
 4. Start with one category (e.g., Books or Films)
 5. Build import system for chosen category
-6. Iterate based on usage and feedback 
+6. Iterate based on usage and feedback
+
+## Future Enhancements
+
+- Dark Mode
+- Authentication
+- Reset filters (advanced control)
+- Media detailed pages
+- Within each media page, be able to group items together into named lists
+
