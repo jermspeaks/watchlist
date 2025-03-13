@@ -31,9 +31,15 @@ import { BookFormData, bookFormSchema } from "@/types/book"
 type BookFormValues = BookFormData
 
 const defaultValues: Partial<BookFormValues> = {
+  title: "",
+  author: "",
   status: "wishlist",
+  source: "physical",
   description: "",
   coverUrl: "",
+  isbn: "",
+  publisher: "",
+  publishedDate: "",
 }
 
 export default function AddBookPage() {
@@ -205,8 +211,11 @@ export default function AddBookPage() {
                       <Input 
                         type="number" 
                         placeholder="Enter page count (optional)" 
-                        {...field} 
-                        value={field.value || ''}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseInt(value, 10));
+                        }}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -273,8 +282,11 @@ export default function AddBookPage() {
                         max="5" 
                         step="1" 
                         placeholder="Enter rating (optional)" 
-                        {...field} 
-                        value={field.value || ''}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseInt(value, 10));
+                        }}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
@@ -292,8 +304,11 @@ export default function AddBookPage() {
                       <Input 
                         type="number" 
                         placeholder="For 'reading' status (optional)" 
-                        {...field} 
-                        value={field.value || ''}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          field.onChange(value === "" ? undefined : parseInt(value, 10));
+                        }}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormMessage />
