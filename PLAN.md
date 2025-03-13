@@ -120,13 +120,13 @@ interface IMediaBase {
   - [x] Watch status tracking
   - [x] Placeholder images
 - [ ] Places
-  - [ ] List view
-  - [ ] Add form
+  - [x] List view
+  - [x] Add form
   - [ ] Map integration
-  - [ ] Photo support
-  - [ ] Visit date tracking
-  - [ ] Location categories (Restaurant, Attraction, etc.)
-  - [ ] Placeholder images
+  - [x] Photo support
+  - [x] Visit date tracking
+  - [x] Location categories (Restaurant, Attraction, etc.)
+  - [x] Placeholder images
 
 #### Database Setup
 
