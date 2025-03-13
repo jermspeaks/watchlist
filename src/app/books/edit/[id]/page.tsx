@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -50,7 +50,10 @@ export default function EditBookPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
-  const { id } = params
+  
+  // Unwrap params using React.use()
+  const unwrappedParams = use(params as unknown as Promise<{ id: string }>)
+  const id = unwrappedParams.id
 
   const form = useForm<BookFormValues>({
     resolver: zodResolver(bookFormSchema),
