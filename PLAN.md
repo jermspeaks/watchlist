@@ -106,12 +106,12 @@ interface IMediaBase {
   - [x] Complexity rating
   - [x] Placeholder images
 - [ ] Podcasts
-  - [ ] List view
-  - [ ] Add form
-  - [ ] Cover art support
-  - [ ] Episode tracking
-  - [ ] Subscription status
-  - [ ] Placeholder images
+  - [x] List view
+  - [x] Add form
+  - [x] Cover art support
+  - [x] Episode tracking
+  - [x] Subscription status
+  - [x] Placeholder images
 - [ ] YouTube
   - [ ] List view
   - [ ] Add form
@@ -247,3 +247,8 @@ interface IMediaBase {
 - Add podcasts by rss feed
 - Add youtube videos by url link
 - Add articles by rss feed
+- Create a board game picker given a set of time we have and the type of gamers that we have
+  - Also, this might be great with AI as well
+
+## Bugs
+- Table headers are not left justified
