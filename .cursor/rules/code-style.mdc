@@ -1,0 +1,12 @@
+---
+description: follow these coding styles
+globs: 
+alwaysApply: false
+---
+#### Code Style
+- ESLint + Prettier configuration
+- Max line length: 100 characters
+- Single quotes for strings
+- Semicolons required
+- Trailing commas in multi-line
+- Async/await over .then()

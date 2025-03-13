@@ -1,0 +1,16 @@
+---
+description: This lists out the core technology that we are using
+globs: 
+alwaysApply: false
+---
+### Core Technologies
+
+- **Framework**: Next.js (React)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: TBD (Considering PostgreSQL with Prisma ORM)
+- **Authentication**: TBD (Considering NextAuth.js)
+- **API Layer**: tRPC/Next.js API Routes
+- **State Management**: React Query + Zustand
+- **Testing**: Jest + React Testing Library
+- **Package Manager**: npm
