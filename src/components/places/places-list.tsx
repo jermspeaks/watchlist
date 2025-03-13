@@ -24,9 +24,13 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   CalendarIcon,
+  Pencil1Icon,
 } from "@radix-ui/react-icons"
 import { MapPin, Globe } from "lucide-react"
 import { PlacesPlaceholder } from "./places-placeholder"
+import { DeleteDialog } from "@/components/delete-dialog"
+import { StatusUpdate } from "@/components/status-update"
+import Link from "next/link"
 
 // Define the Place item type
 interface Place {
@@ -67,6 +71,13 @@ type SortField = "title" | "category" | "city" | "rating" | "visitDate";
 type SortDirection = "asc" | "desc";
 
 const ITEMS_PER_PAGE = 12;
+
+// Status options for the dropdown
+const STATUS_OPTIONS = [
+  { value: "wishlist", label: "Want to Visit" },
+  { value: "in_progress", label: "Planned" },
+  { value: "completed", label: "Visited" },
+];
 
 // Sample data for places
 const SAMPLE_PLACES: Place[] = [
@@ -249,6 +260,7 @@ export function PlacesList({
   const [sortField, setSortField] = useState<SortField>("title");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [currentPage, setCurrentPage] = useState(1);
+  const [places, setPlaces] = useState<Place[]>(SAMPLE_PLACES);
 
   const toggleSort = (field: SortField) => {
     if (sortField === field) {
@@ -259,7 +271,33 @@ export function PlacesList({
     }
   };
 
-  const sortedAndFilteredPlaces = SAMPLE_PLACES
+  // Handle status update
+  const handleStatusUpdate = async (id: string, newStatus: string) => {
+    // In a real app, this would be an API call
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    setPlaces(places.map(place => 
+      place.id === id 
+        ? { 
+            ...place, 
+            status: newStatus as "wishlist" | "in_progress" | "completed",
+            // Clear or set dates based on new status
+            visitDate: newStatus === "completed" ? new Date().toISOString().split('T')[0] : undefined,
+            plannedDate: newStatus === "in_progress" ? new Date().toISOString().split('T')[0] : undefined
+          } 
+        : place
+    ));
+  };
+
+  // Handle delete
+  const handleDelete = async (id: string) => {
+    // In a real app, this would be an API call
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    setPlaces(places.filter(place => place.id !== id));
+  };
+
+  const sortedAndFilteredPlaces = places
     .filter((place) => {
       // Apply search filter
       if (
@@ -354,20 +392,6 @@ export function PlacesList({
         return "$$$$";
       default:
         return priceRange;
-    }
-  };
-
-  // Get status display text
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "wishlist":
-        return "Want to Visit";
-      case "in_progress":
-        return "Planned";
-      case "completed":
-        return "Visited";
-      default:
-        return status;
     }
   };
 
@@ -488,9 +512,13 @@ export function PlacesList({
                   </div>
                 )}
                 <div className="flex flex-wrap gap-2 pt-2">
-                  <Badge variant={place.status === "completed" ? "default" : "secondary"}>
-                    {getStatusText(place.status)}
-                  </Badge>
+                  <StatusUpdate
+                    currentStatus={place.status}
+                    onStatusChange={(newStatus) => handleStatusUpdate(place.id, newStatus)}
+                    statusOptions={STATUS_OPTIONS}
+                    buttonVariant="secondary"
+                    buttonSize="sm"
+                  />
                   {place.priceRange && (
                     <Badge variant="outline">
                       {formatPriceRange(place.priceRange)}
@@ -500,6 +528,24 @@ export function PlacesList({
                     {getLocationIcon(place.locationType)}
                     {place.locationType.charAt(0).toUpperCase() + place.locationType.slice(1)}
                   </Badge>
+                </div>
+                <div className="flex justify-between items-center mt-4 pt-2 border-t">
+                  <Link href={`/places/edit/${place.id}`}>
+                    <Button variant="ghost" size="sm">
+                      <Pencil1Icon className="h-4 w-4 mr-2" />
+                      Edit
+                    </Button>
+                  </Link>
+                  <DeleteDialog
+                    itemName={place.title}
+                    itemType="places"
+                    onDelete={() => handleDelete(place.id)}
+                    trigger={
+                      <Button variant="ghost" size="sm" className="text-destructive">
+                        Delete
+                      </Button>
+                    }
+                  />
                 </div>
               </div>
             </Card>
@@ -527,6 +573,7 @@ export function PlacesList({
                 <TableHead>
                   <SortButton field="rating" label="Rating" />
                 </TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -557,9 +604,13 @@ export function PlacesList({
                         : "-"}
                   </TableCell>
                   <TableCell>
-                    <Badge variant={place.status === "completed" ? "default" : "secondary"}>
-                      {getStatusText(place.status)}
-                    </Badge>
+                    <StatusUpdate
+                      currentStatus={place.status}
+                      onStatusChange={(newStatus) => handleStatusUpdate(place.id, newStatus)}
+                      statusOptions={STATUS_OPTIONS}
+                      buttonVariant="secondary"
+                      buttonSize="sm"
+                    />
                   </TableCell>
                   <TableCell>
                     {place.rating && (
@@ -568,6 +619,26 @@ export function PlacesList({
                         <span className="ml-1">{place.rating}</span>
                       </div>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <Link href={`/places/edit/${place.id}`}>
+                        <Button variant="ghost" size="sm">
+                          <Pencil1Icon className="h-4 w-4" />
+                          <span className="sr-only">Edit</span>
+                        </Button>
+                      </Link>
+                      <DeleteDialog
+                        itemName={place.title}
+                        itemType="places"
+                        onDelete={() => handleDelete(place.id)}
+                        trigger={
+                          <Button variant="ghost" size="sm" className="text-destructive">
+                            Delete
+                          </Button>
+                        }
+                      />
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
