@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -146,6 +147,9 @@ export function BookList({
                       src={book.coverUrl}
                       alt={`Cover of ${book.title}`}
                       className="w-full h-full object-cover"
+                      width={200}
+                      height={300}
+                      style={{ objectFit: 'cover' }}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -174,9 +178,11 @@ export function BookList({
                 </div>
                 {onDeleteBook && (
                   <div className="flex justify-end space-x-2 pt-2">
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Pencil1Icon className="h-4 w-4" />
-                    </Button>
+                    <Link href={`/books/edit/${book.id}`}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Pencil1Icon className="h-4 w-4" />
+                      </Button>
+                    </Link>
                     <Button 
                       variant="ghost" 
                       size="icon" 
@@ -240,9 +246,11 @@ export function BookList({
                   {onDeleteBook && (
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <Pencil1Icon className="h-4 w-4" />
-                        </Button>
+                        <Link href={`/books/edit/${book.id}`}>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Pencil1Icon className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <Button 
                           variant="ghost" 
                           size="icon" 
