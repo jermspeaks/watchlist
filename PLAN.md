@@ -35,61 +35,9 @@ interface IMediaBase {
 
 ## Feature Roadmap
 
-### Phase 1: Foundation (MVP)
+> Note: Phase 1 has been completed. See CHANGELOG.md for details.
 
-#### Basic UI Components ✓
-
-- [x] Create homepage with category dashboard
-- [x] Set up basic category page layout (Books)
-- [x] Implement basic card view for items
-- [x] Add table view option
-- [x] Implement view toggle (card/table)
-- [x] Add pagination support
-- [x] Add sorting functionality
-- [x] Add navigation header
-- [x] Enhance search and filter capabilities
-  - [x] Basic text search
-  - [x] Status filter
-  - [x] Source filter
-  - [x] Sort by different fields
-  - [x] Advanced filters (rating, date, etc.)
-  - [ ] Save filter preferences
-
-#### CRUD Operations
-
-- [ ] Create operations
-  - [x] Add book form with validation
-  - [x] Manual entry support
-  - [ ] ISBN lookup integration
-  - [x] Image URL support
-  - [ ] Image upload
-- [ ] Read operations
-  - [x] Basic list view
-  - [x] Grid/Table view options
-  - [ ] Detailed view page
-  - [ ] Book statistics
-- [ ] Update operations
-  - [ ] Edit book details
-  - [ ] Bulk edit support
-  - [ ] Status update shortcuts
-- [ ] Delete operations
-  - [ ] Single item delete
-  - [ ] Bulk delete support
-  - [ ] Soft delete implementation
-
-#### Category Pages Setup
-
-- [x] Books
-  - [x] List view
-  - [x] Add form
-  - [x] Cover art support
-  - [x] Placeholder images
-- [x] Films & TV
-- [ ] Video Games
-- [ ] Board Games
-- [ ] Podcasts
-- [ ] YouTube
-- [ ] Places
+### Phase 1: Database & Authentication
 
 #### Database Setup
 
@@ -106,7 +54,50 @@ interface IMediaBase {
 - [ ] Add user profiles
 - [ ] Set up authorization rules
 
-### Phase 2: Import Systems
+#### Basic UI Components (Persistence)
+
+- [ ] Save filter preferences
+
+### Phase 2: Enhanced Features
+
+#### Enhanced Category Features
+
+- [ ] Places
+  - [ ] Map integration
+- [ ] Books
+  - [ ] ISBN lookup integration
+  - [ ] Image upload
+- [ ] Detailed view pages
+  - [ ] Book statistics
+  - [ ] Media detailed pages
+
+#### Advanced CRUD Operations
+
+- [ ] Update operations
+  - [ ] Bulk edit support
+- [ ] Delete operations
+  - [ ] Bulk delete support
+  - [ ] Soft delete implementation
+
+#### AI Integration
+
+- [ ] Automated descriptions
+- [ ] Tag generation
+- [ ] Content recommendations
+
+#### RSS Feed Integration
+
+- [ ] Custom RSS reader
+- [ ] Podcast aggregator
+- [ ] YouTube feed manager
+
+#### Rating System
+
+- [ ] Multiple rating criteria
+- [ ] Ranking system
+- [ ] Personal notes
+
+### Phase 3: Import Systems
 
 - [ ] Books
   - [ ] Amazon Wishlist Import
@@ -123,21 +114,6 @@ interface IMediaBase {
 - [ ] YouTube
   - [ ] Watch Later Import
   - [ ] Subscription List Import
-
-### Phase 3: Enhanced Features
-
-- [ ] AI Integration
-  - [ ] Automated descriptions
-  - [ ] Tag generation
-  - [ ] Content recommendations
-- [ ] RSS Feed Integration
-  - [ ] Custom RSS reader
-  - [ ] Podcast aggregator
-  - [ ] YouTube feed manager
-- [ ] Rating System
-  - [ ] Multiple rating criteria
-  - [ ] Ranking system
-  - [ ] Personal notes
 
 ### Phase 4: Advanced Features
 
@@ -207,3 +183,16 @@ interface IMediaBase {
 - Media detailed pages
 - Within each media page, be able to group items together into named lists
 - Build import system for chosen category
+- Add podcasts by rss feed
+- Add youtube videos by url link
+- Add articles by rss feed
+- Create a board game picker given a set of time we have and the type of gamers that we have
+  - Also, this might be great with AI as well
+- YouTube fetch the latest feeds and re-make a subscriptions page that makes sense for you
+  - You can have different groups of subscriptions rather than a default feed
+- There should be a "liked videos" for Youtube that I can then organize
+- TV show calendar view where we can see the thumbnails of what is upcoming
+
+## Bugs
+
+- Table headers are not left justified
