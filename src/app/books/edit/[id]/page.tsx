@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, use } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -24,54 +24,114 @@ import {
 } from "@/components/ui/select"
 import { ArrowLeftIcon } from "@radix-ui/react-icons"
 import Link from "next/link"
-import { addBook } from "@/services/books-service"
+import { getBookById, updateBook } from "@/services/books-service"
 import { useToast } from "@/components/ui/use-toast"
 import { BookFormData, bookFormSchema } from "@/types/book"
 
 type BookFormValues = BookFormData
 
-const defaultValues: Partial<BookFormValues> = {
-  title: "",
-  author: "",
-  status: "wishlist",
-  source: "physical",
-  description: "",
-  coverUrl: "",
-  isbn: "",
-  publisher: "",
-  publishedDate: "",
-}
-
-export default function AddBookPage() {
+export default function EditBookPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
+  
+  // Unwrap params using React.use()
+  const unwrappedParams = use(params as unknown as Promise<{ id: string }>)
+  const id = unwrappedParams.id
 
   const form = useForm<BookFormValues>({
     resolver: zodResolver(bookFormSchema),
-    defaultValues,
+    defaultValues: {
+      title: "",
+      author: "",
+      description: "",
+      isbn: "",
+      pageCount: undefined,
+      publisher: "",
+      publishedDate: "",
+      coverUrl: "",
+      status: "wishlist",
+      source: "physical",
+      rating: undefined,
+      currentPage: undefined,
+    },
   })
+
+  useEffect(() => {
+    async function loadBook() {
+      setIsLoading(true)
+      try {
+        const book = await getBookById(id)
+        if (book) {
+          form.reset({
+            title: book.title,
+            author: book.author,
+            description: book.description || "",
+            isbn: book.isbn || "",
+            pageCount: book.pageCount,
+            publisher: book.publisher || "",
+            publishedDate: book.publishedDate || "",
+            coverUrl: book.coverUrl || "",
+            status: book.status,
+            source: book.source,
+            rating: book.rating,
+            currentPage: book.currentPage,
+          })
+        } else {
+          toast({
+            title: "Error",
+            description: "Book not found",
+            variant: "destructive",
+          })
+          router.push("/books")
+        }
+      } catch (error) {
+        console.error("Failed to load book:", error)
+        toast({
+          title: "Error",
+          description: "Failed to load book. Please try again.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadBook()
+  }, [id, form, router, toast])
 
   async function onSubmit(data: BookFormValues) {
     setIsSubmitting(true)
     try {
-      await addBook(data)
+      await updateBook(id, data)
       toast({
         title: "Success",
-        description: "Book added successfully",
+        description: "Book updated successfully",
       })
       router.push("/books")
       router.refresh()
     } catch (error) {
-      console.error("Failed to add book:", error)
+      console.error("Failed to update book:", error)
       toast({
         title: "Error",
-        description: "Failed to add book. Please try again.",
+        description: "Failed to update book. Please try again.",
         variant: "destructive",
       })
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto flex justify-center items-center py-12">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+          <span className="ml-3">Loading...</span>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -84,8 +144,8 @@ export default function AddBookPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold">Add New Book</h1>
-            <p className="text-muted-foreground">Add a new book to your collection</p>
+            <h1 className="text-3xl font-bold">Edit Book</h1>
+            <p className="text-muted-foreground">Update book details</p>
           </div>
         </div>
 
@@ -178,6 +238,7 @@ export default function AddBookPage() {
                         <SelectItem value="kindle">Kindle</SelectItem>
                         <SelectItem value="kobo">Kobo</SelectItem>
                         <SelectItem value="physical">Physical</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -211,11 +272,8 @@ export default function AddBookPage() {
                       <Input 
                         type="number" 
                         placeholder="Enter page count (optional)" 
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value === "" ? undefined : parseInt(value, 10));
-                        }}
-                        value={field.value ?? ""}
+                        {...field} 
+                        value={field.value || ''}
                       />
                     </FormControl>
                     <FormMessage />
@@ -282,11 +340,8 @@ export default function AddBookPage() {
                         max="5" 
                         step="1" 
                         placeholder="Enter rating (optional)" 
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value === "" ? undefined : parseInt(value, 10));
-                        }}
-                        value={field.value ?? ""}
+                        {...field} 
+                        value={field.value || ''}
                       />
                     </FormControl>
                     <FormMessage />
@@ -304,11 +359,8 @@ export default function AddBookPage() {
                       <Input 
                         type="number" 
                         placeholder="For 'reading' status (optional)" 
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value === "" ? undefined : parseInt(value, 10));
-                        }}
-                        value={field.value ?? ""}
+                        {...field} 
+                        value={field.value || ''}
                       />
                     </FormControl>
                     <FormMessage />
@@ -322,7 +374,7 @@ export default function AddBookPage() {
                 Cancel
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Adding..." : "Add Book"}
+                {isSubmitting ? "Updating..." : "Update Book"}
               </Button>
             </div>
           </form>

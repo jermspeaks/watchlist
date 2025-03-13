@@ -2,11 +2,12 @@
 
 All notable changes to the Watchlist project will be documented in this file.
 
-## [0.2.0] - 2023-11-15
+## [0.2.0] - 2025-03-13
 
 ### Phase 1: Foundation (MVP)
 
 #### Basic UI Components
+
 - Created homepage with category dashboard
 - Set up basic category page layout (Books)
 - Implemented basic card view for items
@@ -22,6 +23,7 @@ All notable changes to the Watchlist project will be documented in this file.
   - Advanced filters (rating, date, etc.)
 
 #### CRUD Operations
+
 - Implemented create operations:
   - Add forms with validation for all media types
   - Manual entry support
@@ -36,6 +38,7 @@ All notable changes to the Watchlist project will be documented in this file.
   - Single item delete with confirmation
 
 #### Category Pages
+
 - Books:
   - List view with filtering and sorting
   - Add form with validation
@@ -85,12 +88,13 @@ All notable changes to the Watchlist project will be documented in this file.
   - Placeholder images
 
 #### Reusable Components
+
 - Created DeleteDialog component for item deletion
 - Implemented StatusUpdate component for quick status changes
 - Built placeholder image components for different media types
 
-## [0.1.0] - 2023-10-01
+## [0.1.0] - 2025-02-03
 
 - Initial project setup
 - Basic Next.js application structure
-- UI component library integration 
+- UI component library integration
