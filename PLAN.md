@@ -75,13 +75,11 @@ interface IMediaBase {
 - [x] Implement optimistic updates for better UX
 - [x] Standardize types between UI and API
 
-#### Data Persistence Features (Current Focus)
+### Phase 2: Data Persistence with other Category Integrations
 
-- [ ] Implement filter preference saving
-- [ ] Add recently viewed items tracking
-- [ ] Create user-specific data storage - i.e. user preferences
+- [ ] Plan out the other categories: Films and TV, Video Games, Board Games, Podcasts, YouTube, and Places
 
-### Phase 2: Authentication System
+### Phase 3: Authentication System
 
 #### Authentication Provider
 
@@ -104,7 +102,7 @@ interface IMediaBase {
 - [ ] Implement authenticated navigation
 - [ ] Add user-specific views
 
-### Phase 3: Enhanced Features
+### Phase 4: Enhanced Features
 
 #### Enhanced Category Features
 
@@ -143,7 +141,7 @@ interface IMediaBase {
 - [ ] Ranking system
 - [ ] Personal notes
 
-### Phase 4: Import Systems
+### Phase 5: Import Systems
 
 - [ ] Books
   - [ ] Amazon Wishlist Import
@@ -161,13 +159,19 @@ interface IMediaBase {
   - [ ] Watch Later Import
   - [ ] Subscription List Import
 
-### Phase 5: Advanced Features
+### Phase 6: Advanced Features
 
 - [ ] Author Pages
 - [ ] Analytics Dashboard
 - [ ] Export Capabilities
 - [ ] Mobile App
 - [ ] Browser Extension
+
+#### Data Persistence Features (Current Focus)
+
+- [ ] Implement filter preference saving
+- [ ] Add recently viewed items tracking
+- [ ] Create user-specific data storage - i.e. user preferences
 
 ## API Integrations
 
